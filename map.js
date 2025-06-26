@@ -12,11 +12,11 @@ var map = L.map('map', {
 let curZoom = map.getZoom();
 var bounds = [[0, 0], [10000, 10000]];
 
-var image1 = L.imageOverlay('WarmWindsMap3.png', bounds);
-var image2 = L.imageOverlay('res_WarmWindsMap3.png', bounds);
-var image3 = L.imageOverlay('rel_WarmWindsMap3.png', bounds);
-var image4 = L.imageOverlay('rac_WarmWindsMap3.png', bounds);
-var image5 = L.imageOverlay('geo_WarmWindsMap3.png', bounds);
+var image1 = L.imageOverlay('WarmWIndsMap3.png', bounds);
+var image2 = L.imageOverlay('WarmWIndsMap3.png', bounds);
+var image3 = L.imageOverlay('WarmWIndsMap3.png', bounds);
+var image4 = L.imageOverlay('WarmWIndsMap3.png', bounds);
+var image5 = L.imageOverlay('WarmWIndsMap3.png', bounds);
 
 var baseMaps = {
     "Политическая карта": image1,
@@ -221,11 +221,8 @@ signatureControl.onAdd = function(map) {
     var div = L.DomUtil.create('div', 'developer-signature');
     div.innerHTML = 
         '<div style="display: flex; align-items: center; background-color: rgba(255, 255, 255, 0.5); padding: 0px; border-radius: 0px;">' +
-            '<img src="1.png" width="41" height="41" alt="Developer Logo">' +
-            '<img src="ru.png" width="24" height="24" alt="Russia Flag" style="margin-left: 3px;">' +
-            '<img src="pl.png" width="24" height="24" alt="Palestine Flag" style="margin-left: 0px;">' +
-            '<a href="https://vk.com/mistershsh" target="_blank" style="margin-left: 3px; text-decoration: underline; color: blue; font-size: 1em;">' +
-                'Mister Sh from Sixieme Terre' +
+            '<a href="https://vk.com/vivmim" target="_blank" style="margin-left: 3px; text-decoration: underline; color: blue; font-size: 1em;">' +
+                'Viv Mim' +
             '</a>' +
         '</div>';
     return div;
