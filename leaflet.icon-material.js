@@ -80,4 +80,4 @@
         return new L.IconMaterial.Icon(options);
     };
 
-}(this, document));
+}(this, document));/*
