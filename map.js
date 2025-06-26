@@ -13,16 +13,10 @@ let curZoom = map.getZoom();
 var bounds = [[0, 0], [6500, 4500]];
 
 var image1 = L.imageOverlay('WarmWIndsMap3.png', bounds);
-var image2 = L.imageOverlay('WarmWIndsMap3.png', bounds);
-var image3 = L.imageOverlay('WarmWIndsMap3.png', bounds);
-var image4 = L.imageOverlay('WarmWIndsMap3.png', bounds);
 var image5 = L.imageOverlay('WarmWIndsMap3.png', bounds);
 
 var baseMaps = {
     "Политическая карта": image1,
-    "Ресурсная карта": image2,
-    "Религиозная карта": image3,
-    "Расовая карта": image4,
     "Географическая карта": image5
 };
 
