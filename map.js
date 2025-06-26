@@ -10,7 +10,7 @@ var map = L.map('map', {
 });
 
 let curZoom = map.getZoom();
-var bounds = [[0, 0], [10000, 10000]];
+var bounds = [[0, 0], [6000, 4500]];
 
 var image1 = L.imageOverlay('WarmWIndsMap3.png', bounds);
 var image2 = L.imageOverlay('WarmWIndsMap3.png', bounds);
