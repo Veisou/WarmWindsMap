@@ -9,9 +9,9 @@
  * Version: 1.0
 */
 
-/*global L*/
+/*global L*/ 
 
-(function (window, document, undefined) {
+/*(function (window, document, undefined) {
     "use strict";
 
     L.IconMaterial = {};
