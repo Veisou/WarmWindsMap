@@ -10,7 +10,7 @@ var map = L.map('map', {
 });
 
 let curZoom = map.getZoom();
-var bounds = [[0, 0], [10500, 6000]];
+var bounds = [[0, 0], [6000, 10500]];
 
 var image1 = L.imageOverlay('WWmap_s1_vl.png', [[0, 0], [3000, 3500]]);
 var image2 = L.imageOverlay('WWmap_s2_vc.png', [[0, 3500], [3000, 7000]]);
