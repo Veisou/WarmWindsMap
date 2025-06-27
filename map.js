@@ -12,12 +12,12 @@ var map = L.map('map', {
 let curZoom = map.getZoom();
 var bounds = [[0, 0], [6000, 10500]];
 
-var image1 = L.imageOverlay('WWmap_s1_vl.png', [[3000, 0], [0, 3500]]);
-var image2 = L.imageOverlay('WWmap_s2_vc.png', [[3000, 3500], [0, 7000]]);
-var image3 = L.imageOverlay('WWmap_s3_vp.png', [[3000, 7000], [30, 10500]]);
-var image4 = L.imageOverlay('WWmap_s4_nl.png', [[6000, 0], [3000, 3500]]);
-var image5 = L.imageOverlay('WWmap_s5_nc.png', [[6000, 3500], [3000, 7000]]);
-var image6 = L.imageOverlay('WWmap_s6_np.png', [[6000, 7000], [3000, 10500]]);
+var image4 = L.imageOverlay('WWmap_s1_vl.png', [[3000, 0], [0, 3500]]);
+var image5 = L.imageOverlay('WWmap_s2_vc.png', [[3000, 3500], [0, 7000]]);
+var image6 = L.imageOverlay('WWmap_s3_vp.png', [[3000, 7000], [30, 10500]]);
+var image1 = L.imageOverlay('WWmap_s4_nl.png', [[6000, 0], [3000, 3500]]);
+var image2 = L.imageOverlay('WWmap_s5_nc.png', [[6000, 3500], [3000, 7000]]);
+var image3 = L.imageOverlay('WWmap_s6_np.png', [[6000, 7000], [3000, 10500]]);
 
 var baseMaps = {
     "Политическая карта": image1,
