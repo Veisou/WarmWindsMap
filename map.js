@@ -36,7 +36,7 @@ map.fitBounds(bounds);
 // map.setMaxBounds(bounds);
 // map.on('drag', function() {
 //     map.panInsideBounds(bounds, { animate: false });
-});
+// });
 // Иконки для разных типов меток
 var iconTypes = {
     'Столица': L.IconMaterial.icon({
