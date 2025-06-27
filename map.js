@@ -12,12 +12,12 @@ var map = L.map('map', {
 let curZoom = map.getZoom();
 var bounds = [[0, 0], [10500, 6000]];
 
-var image1 = L.imageOverlay('WWmap_s1_vl.png', [0, 0]);
-var image2 = L.imageOverlay('WWmap_s2_vc.png', [3500, 0]);
-var image3 = L.imageOverlay('WWmap_s3_vp.png', [7000, 0]);
-var image4 = L.imageOverlay('WWmap_s4_nl.png', [0, 3000]);
-var image5 = L.imageOverlay('WWmap_s5_nc.png', [3500, 3000]);
-var image5 = L.imageOverlay('WWmap_s6_np.png', [7000, 3000]);
+var image1 = L.imageOverlay('WWmap_s1_vl.png', [[0, 0], [0, 0]]);
+var image2 = L.imageOverlay('WWmap_s2_vc.png', [[0, 3500], [3000, 7000]]);
+var image3 = L.imageOverlay('WWmap_s3_vp.png', [[0, 7000], [3000, 10500]]);
+var image4 = L.imageOverlay('WWmap_s4_nl.png', [[3000, 0], [6000, 3500]]);
+var image5 = L.imageOverlay('WWmap_s5_nc.png', [[3000, 3500], [6000, 7000]]);
+var image6 = L.imageOverlay('WWmap_s6_np.png', [[3000, 7000], [6000, 10500]]);
 
 var baseMaps = {
     "Политическая карта": image1,
@@ -25,11 +25,18 @@ var baseMaps = {
 };
 
 image1.addTo(map);
-
+image2.addTo(map);
+image3.addTo(map);
+image4.addTo(map);
+image5.addTo(map);
+image6.addTo(map);
 L.control.layers(baseMaps).addTo(map);
 
 map.fitBounds(bounds);
-
+map.setMaxBounds(bounds);
+map.on('drag', function() {
+    map.panInsideBounds(bounds, { animate: false });
+});
 // Иконки для разных типов меток
 var iconTypes = {
     'Столица': L.IconMaterial.icon({
