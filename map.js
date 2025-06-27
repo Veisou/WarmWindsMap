@@ -27,10 +27,10 @@ var baseMaps = {
 L.control.layers(baseMaps).addTo(map);
 
 map.fitBounds(bounds);
-// map.setMaxBounds(bounds);
-// map.on('drag', function() {
-//     map.panInsideBounds(bounds, { animate: false });
-// });
+map.setMaxBounds(bounds);
+map.on('drag', function() {
+map.panInsideBounds(bounds, { animate: false });
+});
 // Иконки для разных типов меток
 var iconTypes = {
     'Столица': L.IconMaterial.icon({
