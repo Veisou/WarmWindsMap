@@ -19,11 +19,11 @@ var image6 = L.imageOverlay('WWmap_s6_np.png', [[0, 7000], [3000, 10500]]).addTo
 var image1 = L.imageOverlay('WWmap_s1_vl.png', [[3000, 0], [6000, 3500]]).addTo(map);
 var image2 = L.imageOverlay('WWmap_s2_vc.png', [[3000, 3500], [6000, 7000]]).addTo(map);
 var image3 = L.imageOverlay('WWmap_s3_vp.png', [[3000, 7000], [6000, 10500]]).addTo(map);
-var image7 = L.imageOverlay('WWsetka01.png', [[0, 0], [6000, 10500]]).addTo(map);
-
+var image7 = L.imageOverlay('WWmap_provs_zero.png', [[0, 0], [6000, 10500]]);
+var image8 = L.imageOverlay('WWmap_regs_name.png', [[0, 0], [6000, 10500]]);
 var baseMaps = {
-    "Политическая карта": image7,
-    "Географическая карта": image7
+    "Политическая карта": image7.addTo(map),
+    "Географическая карта": image8.addTo(map)
 };
 
 L.control.layers(baseMaps).addTo(map);
