@@ -25,7 +25,9 @@ var emptyLayer = L.layerGroup();
 var baseMaps = {
     "Географическая карта": image8,
     "Политическая карта": image7,
-     "Чистая карта": emptyLayer
+    "Климатическая карта": emptyLayer,
+    "Индекс урожайности": emptyLayer,
+    "Чистая карта": emptyLayer
 };
 
 L.control.layers(baseMaps).addTo(map);
