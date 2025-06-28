@@ -21,9 +21,11 @@ var image2 = L.imageOverlay('WWmap_s2_vc.png', [[3000, 3500], [6000, 7000]]).add
 var image3 = L.imageOverlay('WWmap_s3_vp.png', [[3000, 7000], [6000, 10500]]).addTo(map);
 var image7 = L.imageOverlay('WWmap_provs_zero.png', [[0, 0], [6000, 10500]]);
 var image8 = L.imageOverlay('WWmap_regs_name.png', [[0, 0], [6000, 10500]]);
+var emptyLayer = L.layerGroup();
 var baseMaps = {
-    "Политическая карта": image7.addTo(map),
-    "Географическая карта": image8.addTo(map)
+    "Чистая карта": emptyLayer,
+    "Географическая карта": image8,
+    "Политическая карта": image7
 };
 
 L.control.layers(baseMaps).addTo(map);
