@@ -21,7 +21,7 @@ var image2 = L.imageOverlay('WWmap_s2_vc.png', [[3001, 3501], [6001, 7001]]).add
 var image3 = L.imageOverlay('WWmap_s3_vp.png', [[3000, 7000], [6000, 10500]]).addTo(map);
 var image7 = L.imageOverlay('WWmap_provs_zero.png', [[0, 0], [6000, 10500]], {opacity: 0.4});
 var image8 = L.imageOverlay('WWmap_regs_name.png', [[0, 0], [6000, 10500]]);
-var image9 = L.imageOverLay('WWmap_fer.png', [[0, 0], [6000, 10500]], {opacity: 0.4}));
+var image9 = L.imageOverLay('WWmap_fer.png', [[0, 0], [6000, 10500]], {opacity: 0.4});
 var emptyLayer = L.layerGroup();
 var baseMaps = {
     "Географическая карта": image8,
