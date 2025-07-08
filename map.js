@@ -26,7 +26,7 @@ var emptyLayer = L.layerGroup();
 var baseMaps = {
     "Географическая карта": image8,
     "Политическая карта": image7,
-    "Индекс урожайности": (image7, image9),
+    "Индекс урожайности": image9,
     "Чистая карта": emptyLayer
 };
 
