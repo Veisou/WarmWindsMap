@@ -14,19 +14,19 @@ var bounds = [[0, 0], [6000, 10500]];
 
 
 var image4 = L.imageOverlay('WWmap_s4_nl.png', [[0, 0], [3000, 3500]]).addTo(map);
-var image5 = L.imageOverlay('WWmap_s5_nc.png', [[0, 3500], [3000, 7000]]).addTo(map);
+var image5 = L.imageOverlay('WWmap_s5_nc.png', [[1, 3501], [3001, 7001]]).addTo(map);
 var image6 = L.imageOverlay('WWmap_s6_np.png', [[0, 7000], [3000, 10500]]).addTo(map);
 var image1 = L.imageOverlay('WWmap_s1_vl.png', [[3000, 0], [6000, 3500]]).addTo(map);
-var image2 = L.imageOverlay('WWmap_s2_vc.png', [[3000, 3500], [6000, 7000]]).addTo(map);
+var image2 = L.imageOverlay('WWmap_s2_vc.png', [[3001, 3501], [6001, 7001]]).addTo(map);
 var image3 = L.imageOverlay('WWmap_s3_vp.png', [[3000, 7000], [6000, 10500]]).addTo(map);
 var image7 = L.imageOverlay('WWmap_provs_zero.png', [[0, 0], [6000, 10500]], {opacity: 0.4});
 var image8 = L.imageOverlay('WWmap_regs_name.png', [[0, 0], [6000, 10500]]);
+var image9 = L.imageOverLay('WWmap_fer.png', [[0, 0], [6000, 10500]], {opacity: 0.4}));
 var emptyLayer = L.layerGroup();
 var baseMaps = {
     "Географическая карта": image8,
     "Политическая карта": image7,
-    "Климатическая карта": emptyLayer,
-    "Индекс урожайности": emptyLayer,
+    "Индекс урожайности": (image7, image9),
     "Чистая карта": emptyLayer
 };
 
