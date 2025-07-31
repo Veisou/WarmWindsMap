@@ -107,47 +107,107 @@ capitalMarker.on('dragend', function(event) {
 });
 
 // ID Google Таблицы и API Key
-var url = `https://disk.yandex.ru/i/M-st3axses3psA`;
+// ID Google Таблицы и API Key
+// ЗАМЕНА
+// ID Google Таблицы и API Key
+// ID Google Таблицы и API Key
+
+// var url = `https://disk.yandex.ru/i/M-st3axses3psA`;
 
 // Загружаем данные с Google Sheets
-fetch(url)
-    .then(response => response.json())
+
+// fetch(url)
+//     .then(response => response.json())
+//     .then(data => {
+//         // Логируем полученные данные для отладки
+//         console.log("Полученные данные из Google Sheets:", data);
+//         // Получаем строки значений из таблицы
+//         var rows = data.values;
+//         // Пропускаем первую строку, если это заголовки
+//         rows.slice(1).forEach(function(row) {
+//             // Важно убедиться, что все необходимые поля присутствуют
+//             if (row.length >= 5) {
+//                 var name = row[0]; // Имя
+//                 var description = row[1]; // Описание
+//                 var lat = parseFloat(row[2]); // Широта
+//                 var lng = parseFloat(row[3]); // Долгота
+//                 var type = row[4]; // Тип метки
+//                 // Проверяем корректность данных перед добавлением метки
+//                 if (!isNaN(lat) && !isNaN(lng) && iconTypes[type]) {
+//                     // Создаем метку
+//                     var marker = L.marker([lat, lng], { icon: iconTypes[type] })
+//                         .bindPopup(`
+//                             <div class="popup-header">${name}</div>
+//                             <div class="popup-description">${description}</div>
+//                         `);
+
+//                     if (type !== 'Порт') {
+//                         marker.bindTooltip(name, { permanent: true, direction: 'right', offset: L.point(11, -15) });
+//                     }
+
+//                     // Добавляем метку в соответствующую группу
+//                     layers[type].addLayer(marker);
+//                 }
+//             }
+//         });
+//     })
+//     .catch(error => {
+//         console.error("Ошибка загрузки данных с Google Sheets:", error);
+//     });
+
+// ЗАМЕНА НА СЛЕДУЮЩЕЕ
+
+// Удаляем старый URL и заменяем на загрузку файла
+fetch('WarmWindsTextMap.txt')
+    .then(response => {
+        if (!response.ok) throw new Error("Ошибка загрузки файла");
+        return response.json();
+    })
     .then(data => {
-        // Логируем полученные данные для отладки
-        console.log("Полученные данные из Google Sheets:", data);
-        // Получаем строки значений из таблицы
-        var rows = data.values;
-        // Пропускаем первую строку, если это заголовки
-        rows.slice(1).forEach(function(row) {
-            // Важно убедиться, что все необходимые поля присутствуют
-            if (row.length >= 5) {
-                var name = row[0]; // Имя
-                var description = row[1]; // Описание
-                var lat = parseFloat(row[2]); // Широта
-                var lng = parseFloat(row[3]); // Долгота
-                var type = row[4]; // Тип метки
-                // Проверяем корректность данных перед добавлением метки
-                if (!isNaN(lat) && !isNaN(lng) && iconTypes[type]) {
-                    // Создаем метку
-                    var marker = L.marker([lat, lng], { icon: iconTypes[type] })
-                        .bindPopup(`
-                            <div class="popup-header">${name}</div>
-                            <div class="popup-description">${description}</div>
-                        `);
-
-                    if (type !== 'Порт') {
-                        marker.bindTooltip(name, { permanent: true, direction: 'right', offset: L.point(11, -15) });
-                    }
-
-                    // Добавляем метку в соответствующую группу
-                    layers[type].addLayer(marker);
-                }
-            }
-        });
+        console.log("Данные успешно загружены из файла:", data);
+        processData(data.values);
     })
     .catch(error => {
-        console.error("Ошибка загрузки данных с Google Sheets:", error);
+        console.error("Ошибка:", error);
+        // Фолбек на резервные данные при ошибке
+        const backupData = {
+            values: [
+                ["Меретон", "Описание...", 4363.0, 4464.0, "Столица"]
+            ]
+        };
+        processData(backupData.values);
     });
+
+function processData(rows) {
+    // Пропускаем первую строку (пустой массив)
+    rows.slice(1).forEach(row => {
+        if (row.length >= 5) {
+            const name = row[0];
+            const description = row[1];
+            const lat = parseFloat(row[2]);
+            const lng = parseFloat(row[3]);
+            const type = row[4];
+            
+            if (!isNaN(lat) && !isNaN(lng) && iconTypes[type]) {
+                const marker = L.marker([lat, lng], { icon: iconTypes[type] })
+                    .bindPopup(`
+                        <div class="popup-header">${name}</div>
+                        <div class="popup-description">${description}</div>
+                    `);
+                
+                if (type !== 'Порт') {
+                    marker.bindTooltip(name, { 
+                        permanent: true, 
+                        direction: 'right', 
+                        offset: L.point(11, -15) 
+                    });
+                }
+                
+                layers[type].addLayer(marker);
+            }
+        }
+    });
+}
 
 // Добавляем контрол для включения/выключения групп меток
 L.control.layers(null, {
