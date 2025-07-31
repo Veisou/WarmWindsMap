@@ -107,7 +107,7 @@ capitalMarker.on('dragend', function(event) {
 });
 
 // ID Google Таблицы и API Key
-var url = `https://docs.google.com/spreadsheets/d/16OrE9ObKF0CMQlezdWALwzpB6_war6-HROHedmARuUY/edit?usp=sharing`;
+var url = `https://disk.yandex.ru/i/M-st3axses3psA`;
 
 // Загружаем данные с Google Sheets
 fetch(url)
