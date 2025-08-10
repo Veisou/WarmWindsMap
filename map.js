@@ -7,7 +7,7 @@ var map = L.map('map', {
     fullscreenControlOptions: {
         position: 'topleft',
     }
-    preferCanvas: true, // Использует canvas вместо HTML
+    //preferCanvas: true, // Использует canvas вместо HTML
     fadeAnimation: false, // Отключает анимацию
     zoomSnap: 0.5, // Уменьшает частоту перерисовок
     wheelPxPerZoomLevel: 120 // Ускоряет зум
