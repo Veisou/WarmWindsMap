@@ -16,70 +16,70 @@ var map = L.map('map', {
 
 let curZoom = map.getZoom();
 var bounds = [[0, 0], [6000, 10500]];
-// Добавьте эти параметры в карту
-// Создаем пул воркеров
-const workerPool = [];
-const MAX_WORKERS = 3; // Оптимально для 4-ядерного процессора
+// // Добавьте эти параметры в карту
+// // Создаем пул воркеров
+// const workerPool = [];
+// const MAX_WORKERS = 3; // Оптимально для 4-ядерного процессора
 
-// Очередь загрузки
-const loadQueue = [];
+// // Очередь загрузки
+// const loadQueue = [];
 
-// Функция для обработки очереди
-function processQueue() {
-  while (loadQueue.length > 0 && workerPool.length > 0) {
-    const worker = workerPool.pop();
-    const task = loadQueue.shift();
+// // Функция для обработки очереди
+// function processQueue() {
+//   while (loadQueue.length > 0 && workerPool.length > 0) {
+//     const worker = workerPool.pop();
+//     const task = loadQueue.shift();
     
-    worker.postMessage({
-      url: task.url,
-      id: task.id
-    });
+//     worker.postMessage({
+//       url: task.url,
+//       id: task.id
+//     });
     
-    worker.onmessage = function(e) {
-      if (e.data.error) {
-        console.error(`Error loading ${task.url}:`, e.data.error);
-        workerPool.push(worker);
-        processQueue();
-        return;
-      }
+//     worker.onmessage = function(e) {
+//       if (e.data.error) {
+//         console.error(`Error loading ${task.url}:`, e.data.error);
+//         workerPool.push(worker);
+//         processQueue();
+//         return;
+//       }
       
-      // Создаем ImageOverlay после загрузки
-      const overlay = L.imageOverlay(e.data.imageBitmap, task.bounds, task.options);
+//       // Создаем ImageOverlay после загрузки
+//       const overlay = L.imageOverlay(e.data.imageBitmap, task.bounds, task.options);
       
-      // Добавляем на карту если нужно сразу
-      if (task.immediate) {
-        overlay.addTo(map);
-      }
+//       // Добавляем на карту если нужно сразу
+//       if (task.immediate) {
+//         overlay.addTo(map);
+//       }
       
-      // Сохраняем ссылку
-      task.resolve(overlay);
+//       // Сохраняем ссылку
+//       task.resolve(overlay);
       
-      // Возвращаем воркер в пул
-      workerPool.push(worker);
-      processQueue();
-    };
-  }
-}
+//       // Возвращаем воркер в пул
+//       workerPool.push(worker);
+//       processQueue();
+//     };
+//   }
+// }
 
-// Инициализация воркеров
-for (let i = 0; i < MAX_WORKERS; i++) {
-  workerPool.push(new Worker('image-worker.js'));
-}
+// // Инициализация воркеров
+// for (let i = 0; i < MAX_WORKERS; i++) {
+//   workerPool.push(new Worker('image-worker.js'));
+// }
 
-// Функция для отложенной загрузки
-function lazyLoadImage(url, bounds, options = {}, immediate = false) {
-  return new Promise((resolve) => {
-    loadQueue.push({
-      id: `img_${performance.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      url,
-      bounds,
-      options,
-      immediate,
-      resolve
-    });
-    processQueue();
-  });
-}
+// // Функция для отложенной загрузки
+// function lazyLoadImage(url, bounds, options = {}, immediate = false) {
+//   return new Promise((resolve) => {
+//     loadQueue.push({
+//       id: `img_${performance.now()}_${Math.random().toString(36).substr(2, 9)}`,
+//       url,
+//       bounds,
+//       options,
+//       immediate,
+//       resolve
+//     });
+//     processQueue();
+//   });
+// }
 
 //ggggggggggggggggggggggggggg
 
