@@ -129,8 +129,8 @@ var bounds = [[0, 0], [3940, 4000]];
 
 // var image10 = L.imageOverlay('WWtile1(10500-500) s 0 do 500.jpg', [[0, 0], [500, 10500]]).addTo(map);
 
-var image1 = L.imageOverlay('TeploMapVer.png', [[0, 0], [3940, 2001]]).addTo(map);
-var image2 = L.imageOverlay('TeploMapNiz.png', [[0, 2000], [3940, 4000]]).addTo(map);
+var image1 = L.imageOverlay('TeploMapVer.png', [[0, 0], [2001, 3940]]).addTo(map);
+var image2 = L.imageOverlay('TeploMapNiz.png', [[2000, 0], [4000, 3940]]).addTo(map);
 // var image4 = L.imageOverlay('WWmap_s4_nl.png', [[0, 0], [3001, 3501]]).addTo(map);
 // var image5 = L.imageOverlay('WWmap_s5_nc.png', [[0, 3500], [3001, 7001]]).addTo(map);
 // var image6 = L.imageOverlay('WWmap_s6_np.png', [[0, 7000], [3001, 10501]]).addTo(map);
