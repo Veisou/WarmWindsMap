@@ -129,8 +129,8 @@ var bounds = [[0, 0], [3940, 4000]];
 
 // var image10 = L.imageOverlay('WWtile1(10500-500) s 0 do 500.jpg', [[0, 0], [500, 10500]]).addTo(map);
 
-var image1 = L.imageOverlay('TeploMapVer.png', [[0, 0], [2001, 3940]]).addTo(map);
-var image2 = L.imageOverlay('TeploMapNiz.png', [[2000, 0], [4000, 3940]]).addTo(map);
+var image1 = L.imageOverlay('TeploMapVer.png', [[2000, 0], [4000, 3940]]).addTo(map);
+var image2 = L.imageOverlay('TeploMapNiz.png', [[0, 0], [2001, 3940]]).addTo(map);
 // var image4 = L.imageOverlay('WWmap_s4_nl.png', [[0, 0], [3001, 3501]]).addTo(map);
 // var image5 = L.imageOverlay('WWmap_s5_nc.png', [[0, 3500], [3001, 7001]]).addTo(map);
 // var image6 = L.imageOverlay('WWmap_s6_np.png', [[0, 7000], [3001, 10501]]).addTo(map);
@@ -157,7 +157,246 @@ var baseMaps = {
     // "Индекс урожайности": image9,
     // "Чистая карта": emptyLayer
 };
+// Создаем слой для провинций
+var provincesLayer = L.layerGroup();
 
+// Данные провинций - каждая имеет свои уникальные границы
+var provincesData = [
+    {
+        id: 'pr1',
+        name: 'Река',
+        image: image101,
+        bounds: [[0, 0], [3940, 4000]], // Замените на реальные границы
+        description: 'Великая речная долина с плодородными землями'
+    },
+    {
+        id: 'pr2', 
+        name: 'Реканиз',
+        image: image102,
+        bounds: [[0, 0], [3940, 4000]], // Замените на реальные границы
+        description: 'Нижнее течение реки с болотистыми берегами'
+    },
+    {
+        id: 'pr3',
+        name: 'Реколев',
+        image: image103,
+        bounds: [[0, 0], [3940, 4000]], // Замените на реальные границы
+        description: 'Лесистые берега верхнего течения'
+    },
+    {
+        id: 'pr4',
+        name: 'Левисл',
+        image: image104,
+        bounds: [[0, 0], [3940, 4000]], // Замените на реальные границы
+        description: 'Левый берег реки с горными склонами'
+    },
+    {
+        id: 'pr5',
+        name: 'Прависл',
+        image: image105,
+        bounds: [[0, 0], [3940, 4000]], // Замените на реальные границы
+        description: 'Правый берег с равнинными территориями'
+    }
+];
+
+// Функция для создания интерактивных полигонов
+function createInteractiveProvinces() {
+    provincesData.forEach(function(province) {
+        // Создаем полигон по точным границам провинции
+        var polygon = L.rectangle(province.bounds, {
+            color: 'transparent',
+            fillColor: 'transparent',
+            fillOpacity: 0,
+            weight: 0,
+            interactive: true
+        });
+
+        // Обработчики событий
+        polygon.on('click', function(e) {
+            showProvinceInfo(province);
+            // Подсвечиваем выбранную провинцию
+            highlightProvince(polygon);
+        });
+
+        polygon.on('mouseover', function(e) {
+            if (!polygon.isHighlighted) {
+                polygon.setStyle({
+                    fillColor: '#FFD700',
+                    fillOpacity: 0.2,
+                    weight: 1,
+                    color: '#FFD700'
+                });
+            }
+        });
+
+        polygon.on('mouseout', function(e) {
+            if (!polygon.isHighlighted) {
+                polygon.setStyle({
+                    fillColor: 'transparent',
+                    fillOpacity: 0,
+                    weight: 0,
+                    color: 'transparent'
+                });
+            }
+        });
+
+        // Сохраняем данные провинции
+        polygon.provinceData = province;
+        polygon.addTo(provincesLayer);
+    });
+}
+
+// Переменная для хранения текущей выделенной провинции
+var currentHighlightedProvince = null;
+
+// Функция для подсветки выбранной провинции
+function highlightProvince(polygon) {
+    // Сбрасываем предыдущую подсветку
+    if (currentHighlightedProvince && currentHighlightedProvince !== polygon) {
+        currentHighlightedProvince.setStyle({
+            fillColor: 'transparent',
+            fillOpacity: 0,
+            weight: 0,
+            color: 'transparent'
+        });
+        currentHighlightedProvince.isHighlighted = false;
+    }
+    
+    // Подсвечиваем новую провинцию
+    polygon.setStyle({
+        fillColor: '#8B0000',
+        fillOpacity: 0.3,
+        weight: 2,
+        color: '#8B0000'
+    });
+    polygon.isHighlighted = true;
+    currentHighlightedProvince = polygon;
+}
+
+// Функция для показа информации о провинции
+function showProvinceInfo(province) {
+    // Ищем дополнительные данные в вашем файле
+    var additionalData = findProvinceInData(province.name);
+    
+    var popupContent = `
+        <div class="province-popup" style="min-width: 300px;">
+            <h3 style="margin: 0 0 15px 0; color: #8B0000; border-bottom: 2px solid #CD853F; padding-bottom: 8px; text-align: center;">
+                ${province.name}
+            </h3>
+            
+            <div style="margin-bottom: 12px; padding: 8px; background: rgba(205, 133, 63, 0.1); border-radius: 4px;">
+                <strong style="color: #8B4513;">📖 Описание:</strong><br>
+                ${additionalData ? additionalData.description : province.description}
+            </div>
+            
+            ${additionalData ? `
+            <div style="margin-bottom: 10px;">
+                <strong style="color: #8B4513;">🏛️ Тип:</strong> ${additionalData.type || 'Провинция'}
+            </div>
+            
+            <div style="margin-bottom: 10px; font-size: 0.9em; color: #666;">
+                <strong>📍 Координаты:</strong> ${additionalData.coordinates}
+            </div>
+            
+            ${additionalData.special ? `
+            <div style="margin-bottom: 10px; padding: 6px; background: rgba(255, 215, 0, 0.1); border-left: 3px solid #FFD700;">
+                <strong style="color: #8B4513;">✨ Особенности:</strong> ${additionalData.special}
+            </div>
+            ` : ''}
+            ` : ''}
+            
+            <div style="font-size: 0.8em; color: #999; text-align: center; margin-top: 15px; border-top: 1px solid #DDD; padding-top: 8px;">
+                Кликните на другую провинцию для просмотра информации
+            </div>
+        </div>
+    `;
+
+    // Центр провинции для popup
+    var center = [
+        (province.bounds[0][0] + province.bounds[1][0]) / 2,
+        (province.bounds[0][1] + province.bounds[1][1]) / 2
+    ];
+
+    L.popup()
+        .setLatLng(center)
+        .setContent(popupContent)
+        .openOn(map);
+}
+
+// Функция для поиска дополнительной информации в ваших данных
+function findProvinceInData(provinceName) {
+    // Интегрируем с вашими данными из WarmWindsTextMap.txt
+    // Пример поиска по имени провинции
+    if (window.sheetData && window.sheetData.values) {
+        for (let i = 1; i < window.sheetData.values.length; i++) {
+            const row = window.sheetData.values[i];
+            if (row[0] && row[0].toLowerCase().includes(provinceName.toLowerCase())) {
+                return {
+                    name: row[0],
+                    description: row[1],
+                    coordinates: `${row[2]}, ${row[3]}`,
+                    type: row[4],
+                    special: row[5] || '' // если есть дополнительные поля
+                };
+            }
+        }
+    }
+    return null;
+}
+
+// Модифицируем вашу функцию загрузки данных для сохранения их в глобальной переменной
+fetch('WarmWindsTextMap.txt')
+    .then(response => {
+        if (!response.ok) throw new Error("Ошибка загрузки файла");
+        return response.json();
+    })
+    .then(data => {
+        console.log("Данные успешно загружены из файла:", data);
+        // Сохраняем данные в глобальной переменной для доступа из других функций
+        window.sheetData = data;
+        processData(data.values);
+    })
+    .catch(error => {
+        console.error("Ошибка:", error);
+    });
+
+// Инициализируем интерактивные провинции
+createInteractiveProvinces();
+
+// Обновляем baseMaps
+var baseMaps = {
+    "Карта провинций": L.layerGroup([ProvMap, provincesLayer]),
+    // Другие слои...
+};
+
+// Обновляем контрол слоев
+L.control.layers(baseMaps, {
+    'Столицы': layers['Столица'],
+    'Города': layers['Город'],
+    'Крепости': layers['Крепость'],
+    'Порты': layers['Порт'],
+    'Отслеживание координат': coordinateTrackingLayer,
+    'Интерактивные провинции': provincesLayer
+}).addTo(map);
+
+// Добавляем CSS стили
+var style = document.createElement('style');
+style.textContent = `
+    .province-popup {
+        font-family: 'Georgia', serif;
+        line-height: 1.4;
+    }
+    .leaflet-popup-content-wrapper {
+        background: linear-gradient(135deg, #F5F5DC, #DEB887);
+        border: 2px solid #8B4513;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .leaflet-popup-tip {
+        background: #DEB887;
+    }
+`;
+document.head.appendChild(style);
 L.control.layers(baseMaps).addTo(map);
 
 map.fitBounds(bounds);
