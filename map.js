@@ -633,3 +633,13 @@ if (document.readyState === 'loading') {
 } else {
     initializeMap();
 }
+
+// Добавьте после инициализации карты
+setTimeout(function() {
+    var layersControl = document.querySelector('.leaflet-control-layers');
+    if (layersControl) {
+        layersControl.style.display = 'block';
+        layersControl.style.visibility = 'visible';
+        layersControl.style.opacity = '1';
+    }
+}, 1000);
