@@ -78,15 +78,42 @@ var iconTypes = {
         outlineWidth: 2,
         iconSize: [25, 34],
         popupAnchor: [0, -34]
+    }),
+    'Город': L.IconMaterial.icon({
+        icon: 'house',
+        iconColor: '#F5F5DC',
+        markerColor: '#CD853F',
+        outlineColor: '#2F1B0A',
+        outlineWidth: 2,
+        iconSize: [22, 30],
+        popupAnchor: [0, -30]
+    }),
+    'Крепость': L.IconMaterial.icon({
+        icon: 'fort',
+        iconColor: '#D3D3D3',
+        markerColor: '#696969',
+        outlineColor: '#2F1B0A',
+        outlineWidth: 2,
+        iconSize: [23, 32],
+        popupAnchor: [0, -32]
+    }),
+    'Порт': L.IconMaterial.icon({
+        icon: 'anchor',
+        iconColor: '#F0E68C',
+        markerColor: '#4682B4',
+        outlineColor: '#2F1B0A',
+        outlineWidth: 2,
+        iconSize: [18, 25],
+        popupAnchor: [0, -25]
     })
 };
 
 // Группы слоев для разных типов меток
 var layers = {
-    'Столица': L.layerGroup().addTo(map),
-    'Город': L.layerGroup().addTo(map),
-    'Крепость': L.layerGroup().addTo(map),
-    'Порт': L.layerGroup().addTo(map)
+    'Столица': L.layerGroup(),
+    'Город': L.layerGroup(),
+    'Крепость': L.layerGroup(),
+    'Порт': L.layerGroup()
 };
 
 // ==================== ИНТЕРАКТИВНЫЕ ПРОВИНЦИИ ====================
@@ -290,7 +317,11 @@ function loadMapData() {
             // Резервные данные
             const backupData = {
                 values: [
-                    ["Меретон", "Столица Тепловетрия", 4363.0, 4464.0, "Столица"]
+                    [],
+                    ["Меретон", "Столица Тепловетрия", 2000.0, 2000.0, "Столица"],
+                    ["Пекло", "Дымящий вулкан, самый высокий и крупный из всех вулканов Тепловетрия", 2052.0, 4864.0, "Город"],
+                    ["Древо", "Исполинское Древо, чья вершина теряется в облаках", 2304.0, 7664.0, "Чудеса"],
+                    ["Небоносец", "Титан, носящий на своих плечах небесный свод", 1988.0, 6586.0, "Чудеса"]
                 ]
             };
             processData(backupData.values);
@@ -301,7 +332,10 @@ function loadMapData() {
  * Обрабатывает данные и создает метки на карте
  */
 function processData(rows) {
-    rows.slice(1).forEach(row => {
+    // Пропускаем первую строку (пустой массив или заголовки)
+    var startIndex = rows[0] && rows[0].length === 0 ? 1 : 0;
+    
+    rows.slice(startIndex).forEach(row => {
         if (row.length >= 5) {
             const name = row[0];
             const description = row[1];
@@ -381,55 +415,10 @@ function RenderingChanger() {
  */
 function setupZoomHideSpecificPanes(map, layersToHide, minZoomToHide) {
     // Реализация скрытия элементов при необходимости
+    // Можно добавить логику скрытия/показа элементов при определенном зуме
 }
 
-// ==================== ИНИЦИАЛИЗАЦИЯ КАРТЫ ====================
-
-// Базовые слои карты
-var baseMaps = {
-    "🗺️ Карта провинций": L.layerGroup([ProvMap, provincesLayer]),
-    "🏔️ Географическая карта": L.layerGroup([image1, image2])
-};
-
-// Слои с метками
-var overlayMaps = {
-    '🏛️ Столицы': layers['Столица'],
-    '🏘️ Города': layers['Город'],
-    '🏰 Крепости': layers['Крепость'],
-    '⚓ Порты': layers['Порт'],
-    '📍 Отслеживание координат': coordinateTrackingLayer,
-    '🎯 Интерактивные провинции': provincesLayer
-};
-
-// Инициализация карты
-function initializeMap() {
-    // Настройка границ
-    map.fitBounds(bounds);
-    map.setMaxBounds(bounds);
-    
-    // Создание интерактивных провинций
-    createInteractiveProvinces();
-    
-    // Загрузка данных
-    loadMapData();
-    
-    // Добавление контролов
-    L.control.layers(baseMaps, overlayMaps).addTo(map);
-    
-    // Обработчики событий
-    map.on('drag', function() {
-        map.panInsideBounds(bounds, { animate: false });
-    });
-    
-    map.on('zoomend', function() {
-        RenderingChanger();
-        setupZoomHideSpecificPanes(map, [layers['Столица'], layers['Город']], 5);
-    });
-    
-    console.log("🗺️ Карта Тепловетрия успешно инициализирована");
-}
-
-// ==================== ДОПОЛНИТЕЛЬНЫЕ ЭЛЕМЕНТЫ ====================
+// ==================== КОНТРОЛЫ КАРТЫ ====================
 
 // Слой для отслеживания координат
 var coordinateTrackingLayer = L.layerGroup();
@@ -470,7 +459,7 @@ signatureControl.onAdd = function(map) {
     var div = L.DomUtil.create('div', 'developer-signature');
     div.innerHTML = `
         <div class="signature-container">
-            <span class="signature-text">Создатель:</span>
+            <span class="signature-text">По вопросам:</span>
             <a href="https://vk.com/vivmim" target="_blank" class="signature-link">
                 Viv Mim
             </a>
@@ -479,12 +468,120 @@ signatureControl.onAdd = function(map) {
     return div;
 };
 
-signatureControl.addTo(map);
+// ==================== ИНИЦИАЛИЗАЦИЯ КАРТЫ ====================
+
+// Базовые слои карты
+var baseMaps = {
+    "🗺️ Карта провинций": L.layerGroup([ProvMap, provincesLayer]),
+    "🏔️ Географическая карта": L.layerGroup([image1, image2])
+};
+
+// Слои с метками
+var overlayMaps = {
+    '🏛️ Столицы': layers['Столица'],
+    '🏘️ Города': layers['Город'],
+    '🏰 Крепости': layers['Крепость'],
+    '⚓ Порты': layers['Порт'],
+    '✨ Чудеса': layers['Чудеса'],
+    '🏚️ Руины': layers['Руины'],
+    '📍 Отслеживание координат': coordinateTrackingLayer,
+    '🎯 Интерактивные провинции': provincesLayer
+};
+
+/**
+ * Инициализирует карту и все компоненты
+ */
+function initializeMap() {
+    // Настройка границ
+    map.fitBounds(bounds);
+    map.setMaxBounds(bounds);
+    
+    // Создание интерактивных провинций
+    createInteractiveProvinces();
+    
+    // Загрузка данных
+    loadMapData();
+    
+    // Добавление контролов слоев
+    L.control.layers(baseMaps, overlayMaps, {
+        position: 'topright',
+        collapsed: true
+    }).addTo(map);
+    
+    // Добавление подписи автора
+    signatureControl.addTo(map);
+    
+    // Обработчики событий
+    map.on('drag', function() {
+        map.panInsideBounds(bounds, { animate: false });
+    });
+    
+    map.on('zoomend', function() {
+        RenderingChanger();
+        setupZoomHideSpecificPanes(map, [layers['Столица'], layers['Город']], 5);
+    });
+    
+    // Первоначальная настройка рендеринга
+    RenderingChanger();
+    
+    console.log("🗺️ Карта Тепловетрия успешно инициализирована");
+}
 
 // ==================== СТИЛИ CSS ====================
 
 var style = document.createElement('style');
 style.textContent = `
+    /* Основные стили для карты */
+    .leaflet-container {
+        background: #2F1B0A;
+        font-family: 'Georgia', serif;
+    }
+    
+    /* Стили для контрола слоев */
+    .leaflet-control-layers {
+        background: rgba(245, 245, 220, 0.95) !important;
+        border: 2px solid #8B4513 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    }
+    
+    .leaflet-control-layers-toggle {
+        background-color: #DEB887 !important;
+        border: 1px solid #8B4513 !important;
+    }
+    
+    .leaflet-control-layers-expanded {
+        background: linear-gradient(135deg, #F5F5DC, #DEB887) !important;
+        padding: 10px !important;
+        border-radius: 5px !important;
+        min-width: 200px !important;
+    }
+    
+    .leaflet-control-layers label {
+        font-family: 'Georgia', serif !important;
+        color: #2F1B0A !important;
+        margin-bottom: 5px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 5px 0 !important;
+        cursor: pointer !important;
+    }
+    
+    .leaflet-control-layers-separator {
+        border-top: 1px solid #8B4513 !important;
+        margin: 8px 0 !important;
+    }
+    
+    .leaflet-control-layers-base label,
+    .leaflet-control-layers-overlays label {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 5px 0 !important;
+    }
+    
+    /* Стили для всплывающих окон */
     .province-popup {
         font-family: 'Georgia', serif;
         min-width: 280px;
@@ -578,6 +675,7 @@ style.textContent = `
         border: 1px solid #2F1B0A;
         border-radius: 3px;
         font-weight: bold;
+        font-family: 'Georgia', serif;
     }
     
     .capital-popup h3 {
@@ -585,6 +683,7 @@ style.textContent = `
         margin: 0 0 8px 0;
     }
     
+    /* Стили для подписи автора */
     .developer-signature {
         font-family: Arial, sans-serif;
     }
@@ -594,6 +693,7 @@ style.textContent = `
         padding: 5px 10px;
         border-radius: 15px;
         border: 1px solid rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(2px);
     }
     
     .signature-text {
@@ -614,32 +714,44 @@ style.textContent = `
         color: #CD853F;
     }
     
+    /* Анимации для провинций */
     .province-polygon {
         transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    /* Стили для полноэкранного режима */
+    .leaflet-control-fullscreen a {
+        background: #DEB887;
+        border: 1px solid #8B4513;
+        border-radius: 4px;
     }
 `;
+
+// Добавляем стили в документ
 document.head.appendChild(style);
 
 // ==================== ЗАПУСК КАРТЫ ====================
 
-// Инициализация карты при загрузке страницы
-document.addEventListener('DOMContentLoaded', function() {
-    initializeMap();
-});
-
-// Альтернативная инициализация для совместимости
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeMap);
-} else {
-    initializeMap();
+/**
+ * Запускает инициализацию карты после загрузки DOM
+ */
+function startMap() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeMap);
+    } else {
+        initializeMap();
+    }
 }
 
-// Добавьте после инициализации карты
-setTimeout(function() {
-    var layersControl = document.querySelector('.leaflet-control-layers');
-    if (layersControl) {
-        layersControl.style.display = 'block';
-        layersControl.style.visibility = 'visible';
-        layersControl.style.opacity = '1';
-    }
-}, 1000);
+// Запускаем карту
+startMap();
+
+// Экспорт для глобального доступа (если нужно)
+window.WarmWindsMap = {
+    map: map,
+    layers: layers,
+    provinces: provincesLayer,
+    highlightProvince: highlightProvince,
+    showProvinceInfo: showProvinceInfo
+};
