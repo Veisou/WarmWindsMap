@@ -1,3 +1,9 @@
+/**
+ * Warm Winds Interactive Map
+ * Карта мира Тепловетрия с интерактивными провинциями и метками
+ */
+
+// Конфигурация карты
 var map = L.map('map', {
     crs: L.CRS.Simple,
     minZoom: -2,
@@ -5,226 +11,160 @@ var map = L.map('map', {
     attributionControl: false,
     fullscreenControl: true,
     fullscreenControlOptions: {
-    position: 'topleft',
-    preferCanvas: true, // Использует canvas вместо HTML
-    fadeAnimation: false, // Отключает анимацию
-    zoomSnap: 0.5, // Уменьшает частоту перерисовок
-    wheelPxPerZoomLevel: 120 // Ускоряет зум
+        position: 'topleft',
+        preferCanvas: true,
+        fadeAnimation: false,
+        zoomSnap: 0.5,
+        wheelPxPerZoomLevel: 120
     }
-    
 });
 
+// Глобальные переменные
 let curZoom = map.getZoom();
 var bounds = [[0, 0], [3940, 4000]];
-// // Добавьте эти параметры в карту
-// // Создаем пул воркеров
-// const workerPool = [];
-// const MAX_WORKERS = 3; // Оптимально для 4-ядерного процессора
+var currentHighlightedProvince = null;
 
-// // Очередь загрузки
-// const loadQueue = [];
+// ==================== СЛОИ КАРТЫ ====================
 
-// // Функция для обработки очереди
-// function processQueue() {
-//   while (loadQueue.length > 0 && workerPool.length > 0) {
-//     const worker = workerPool.pop();
-//     const task = loadQueue.shift();
-    
-//     worker.postMessage({
-//       url: task.url,
-//       id: task.id
-//     });
-    
-//     worker.onmessage = function(e) {
-//       if (e.data.error) {
-//         console.error(`Error loading ${task.url}:`, e.data.error);
-//         workerPool.push(worker);
-//         processQueue();
-//         return;
-//       }
-      
-//       // Создаем ImageOverlay после загрузки
-//       const overlay = L.imageOverlay(e.data.imageBitmap, task.bounds, task.options);
-      
-//       // Добавляем на карту если нужно сразу
-//       if (task.immediate) {
-//         overlay.addTo(map);
-//       }
-      
-//       // Сохраняем ссылку
-//       task.resolve(overlay);
-      
-//       // Возвращаем воркер в пул
-//       workerPool.push(worker);
-//       processQueue();
-//     };
-//   }
-// }
-
-// // Инициализация воркеров
-// for (let i = 0; i < MAX_WORKERS; i++) {
-//   workerPool.push(new Worker('image-worker.js'));
-// }
-
-// // Функция для отложенной загрузки
-// function lazyLoadImage(url, bounds, options = {}, immediate = false) {
-//   return new Promise((resolve) => {
-//     loadQueue.push({
-//       id: `img_${performance.now()}_${Math.random().toString(36).substr(2, 9)}`,
-//       url,
-//       bounds,
-//       options,
-//       immediate,
-//       resolve
-//     });
-//     processQueue();
-//   });
-// }
-
-//ggggggggggggggggggggggggggg
-
-// var image1 = L.imageOverlay('WWmap_s1_vl.png', [[3000, 0], [6001, 3501]], {
-//   minZoom: -2,
-//   maxZoom: 2,
-//   bounds: [[0,0], [6000,10500]],
-//   noWrap: true,
-//   tms: true // если тайлы в формате TMS
-// }).addTo(map);
-// var image2 = L.imageOverlay('WWmap_s2_vc.png', [[3000, 3500], [6001, 7001]], {
-//   minZoom: -2,
-//   maxZoom: 2,
-//   bounds: [[0,0], [6000,10500]],
-//   noWrap: true,
-//   tms: true // если тайлы в формате TMS
-// }).addTo(map);
-// var image3 = L.imageOverlay('WWmap_s3_vp.png', [[3000, 7000], [6001, 10501]], {
-//   minZoom: -2,
-//   maxZoom: 2,
-//   bounds: [[0,0], [6000,10500]],
-//   noWrap: true,
-//   tms: true // если тайлы в формате TMS
-// }).addTo(map);
-// var image4 = L.imageOverlay('WWmap_s4_nl.png', [[0, 0], [3001, 3501]], {
-//   minZoom: -2,
-//   maxZoom: 2,
-//   bounds: [[0,0], [6000,10500]],
-//   noWrap: true,
-//   tms: true // если тайлы в формате TMS
-// }).addTo(map);
-// var image5 = L.imageOverlay('WWmap_s5_nc.png', [[0, 3500], [3001, 7001]], {
-//   minZoom: -2,
-//   maxZoom: 2,
-//   bounds: [[0,0], [6000,10500]],
-//   noWrap: true,
-//   tms: true // если тайлы в формате TMS
-// }).addTo(map);
-// var image6 = L.imageOverlay('WWmap_s6_np.png', [[0, 7000], [3001, 10501]], {
-//   minZoom: -2,
-//   maxZoom: 2,
-//   bounds: [[0,0], [6000,10500]],
-//   noWrap: true,
-//   tms: true // если тайлы в формате TMS
-// }).addTo(map);
-
-
-// var image10 = L.imageOverlay('WWtile1(10500-500) s 0 do 500.jpg', [[0, 0], [500, 10500]]).addTo(map);
-
+// Основные изображения карты
 var image1 = L.imageOverlay('TeploMapVer.png', [[2000, 0], [4000, 3940]]).addTo(map);
 var image2 = L.imageOverlay('TeploMapNiz.png', [[0, 0], [2001, 3940]]).addTo(map);
-// var image4 = L.imageOverlay('WWmap_s4_nl.png', [[0, 0], [3001, 3501]]).addTo(map);
-// var image5 = L.imageOverlay('WWmap_s5_nc.png', [[0, 3500], [3001, 7001]]).addTo(map);
-// var image6 = L.imageOverlay('WWmap_s6_np.png', [[0, 7000], [3001, 10501]]).addTo(map);
-// var image1 = L.imageOverlay('WWmap_s1_vl.png', [[3000, 0], [6001, 3501]]).addTo(map);
-// var image2 = L.imageOverlay('WWmap_s2_vc.png', [[3000, 3500], [6001, 7001]]).addTo(map);
-// var image3 = L.imageOverlay('WWmap_s3_vp.png', [[3000, 7000], [6001, 10501]]).addTo(map);
-// var image7 = L.imageOverlay('WWmap_provs_zero.png', [[0, 0], [6000, 10500]], {opacity: 0.4});
-// var image8 = L.imageOverlay('WWmap_regs_name.png', [[0, 0], [6000, 10500]]);
-// var image9 = L.imageOverlay('WWmap_fer.png', [[0, 0], [6000, 10500]], {opacity: 0.7});
-var image101 = L.imageOverlay('pr1 reka.png', [[0, 0], [3940, 4000]],  {opacity: 0.5});
-var image102 = L.imageOverlay('pr2 rekaniz.png', [[0, 0], [3940, 4000]], {opacity: 0.5});
-var image103 = L.imageOverlay('pr3 rekalev.png', [[0, 0], [3940, 4000]], {opacity: 0.5});
-var image104 = L.imageOverlay('pr4 levisl1.png', [[0, 0], [3940, 4000]],  {opacity: 0.5});
-var image105 = L.imageOverlay('pr5 pravisl1.png', [[0, 0], [3940, 4000]],  {opacity: 0.5});
-var ProvMap = L.layerGroup([
-    image101,
-    image102,
-    image103,
-    image104,
-    image105,
-]);
-var baseMaps = {
-    "Карта провинций": ProvMap
-    // "Индекс урожайности": image9,
-    // "Чистая карта": emptyLayer
+
+// Слои провинций
+var image101 = L.imageOverlay('pr1 reka.png', [[0, 0], [3940, 4000]], { opacity: 0.5 });
+var image102 = L.imageOverlay('pr2 rekaniz.png', [[0, 0], [3940, 4000]], { opacity: 0.5 });
+var image103 = L.imageOverlay('pr3 rekalev.png', [[0, 0], [3940, 4000]], { opacity: 0.5 });
+var image104 = L.imageOverlay('pr4 levisl1.png', [[0, 0], [3940, 4000]], { opacity: 0.5 });
+var image105 = L.imageOverlay('pr5 pravisl1.png', [[0, 0], [3940, 4000]], { opacity: 0.5 });
+
+var ProvMap = L.layerGroup([image101, image102, image103, image104, image105]);
+
+// ==================== ИКОНКИ И СТИЛИ ====================
+
+// Кастомные иконки в античном стиле
+var iconTypes = {
+    'Чудеса': L.IconMaterial.icon({
+        icon: 'auto_awesome',
+        iconColor: '#FFD700',
+        markerColor: '#8B0000',
+        outlineColor: '#2F1B0A',
+        outlineWidth: 2,
+        iconSize: [25, 34],
+        popupAnchor: [0, -34]
+    }),
+    'Руины': L.IconMaterial.icon({
+        icon: 'landslide',
+        iconColor: '#8B7355',
+        markerColor: '#4A3520',
+        outlineColor: '#2F1B0A',
+        outlineWidth: 2,
+        iconSize: [20, 28],
+        popupAnchor: [0, -28]
+    }),
+    'Поселения': L.IconMaterial.icon({
+        icon: 'account_balance',
+        iconColor: '#F5F5DC',
+        markerColor: '#CD853F',
+        outlineColor: '#2F1B0A',
+        outlineWidth: 2,
+        iconSize: [25, 34],
+        popupAnchor: [0, -34]
+    }),
+    'Столица': L.IconMaterial.icon({
+        icon: 'location_city',
+        iconColor: '#FFD700',
+        markerColor: '#8B0000',
+        outlineColor: '#2F1B0A',
+        outlineWidth: 2,
+        iconSize: [25, 34],
+        popupAnchor: [0, -34]
+    })
 };
-// Создаем слой для провинций
+
+// Группы слоев для разных типов меток
+var layers = {
+    'Столица': L.layerGroup().addTo(map),
+    'Город': L.layerGroup().addTo(map),
+    'Крепость': L.layerGroup().addTo(map),
+    'Порт': L.layerGroup().addTo(map)
+};
+
+// ==================== ИНТЕРАКТИВНЫЕ ПРОВИНЦИИ ====================
+
+// Слой для интерактивных провинций
 var provincesLayer = L.layerGroup();
 
-// Данные провинций - каждая имеет свои уникальные границы
+// Данные провинций
 var provincesData = [
     {
         id: 'pr1',
         name: 'Река',
         image: image101,
-        bounds: [[0, 0], [3940, 4000]], // Замените на реальные границы
-        description: 'Великая речная долина с плодородными землями'
+        bounds: [[0, 0], [3940, 4000]],
+        description: 'Великая речная долина с плодородными землями',
+        color: '#4682B4'
     },
     {
-        id: 'pr2', 
+        id: 'pr2',
         name: 'Реканиз',
         image: image102,
-        bounds: [[0, 0], [3940, 4000]], // Замените на реальные границы
-        description: 'Нижнее течение реки с болотистыми берегами'
+        bounds: [[0, 0], [3940, 4000]],
+        description: 'Нижнее течение реки с болотистыми берегами',
+        color: '#5F9EA0'
     },
     {
         id: 'pr3',
         name: 'Реколев',
         image: image103,
-        bounds: [[0, 0], [3940, 4000]], // Замените на реальные границы
-        description: 'Лесистые берега верхнего течения'
+        bounds: [[0, 0], [3940, 4000]],
+        description: 'Лесистые берега верхнего течения',
+        color: '#2E8B57'
     },
     {
         id: 'pr4',
         name: 'Левисл',
         image: image104,
-        bounds: [[0, 0], [3940, 4000]], // Замените на реальные границы
-        description: 'Левый берег реки с горными склонами'
+        bounds: [[0, 0], [3940, 4000]],
+        description: 'Левый берег реки с горными склонами',
+        color: '#D2691E'
     },
     {
         id: 'pr5',
         name: 'Прависл',
         image: image105,
-        bounds: [[0, 0], [3940, 4000]], // Замените на реальные границы
-        description: 'Правый берег с равнинными территориями'
+        bounds: [[0, 0], [3940, 4000]],
+        description: 'Правый берег с равнинными территориями',
+        color: '#CD853F'
     }
 ];
 
-// Функция для создания интерактивных полигонов
+/**
+ * Создает интерактивные полигоны для провинций
+ */
 function createInteractiveProvinces() {
     provincesData.forEach(function(province) {
-        // Создаем полигон по точным границам провинции
         var polygon = L.rectangle(province.bounds, {
             color: 'transparent',
             fillColor: 'transparent',
             fillOpacity: 0,
             weight: 0,
-            interactive: true
+            interactive: true,
+            className: 'province-polygon'
         });
 
         // Обработчики событий
         polygon.on('click', function(e) {
             showProvinceInfo(province);
-            // Подсвечиваем выбранную провинцию
             highlightProvince(polygon);
         });
 
         polygon.on('mouseover', function(e) {
             if (!polygon.isHighlighted) {
                 polygon.setStyle({
-                    fillColor: '#FFD700',
-                    fillOpacity: 0.2,
-                    weight: 1,
-                    color: '#FFD700'
+                    fillColor: province.color,
+                    fillOpacity: 0.15,
+                    weight: 2,
+                    color: province.color
                 });
             }
         });
@@ -240,16 +180,14 @@ function createInteractiveProvinces() {
             }
         });
 
-        // Сохраняем данные провинции
         polygon.provinceData = province;
         polygon.addTo(provincesLayer);
     });
 }
 
-// Переменная для хранения текущей выделенной провинции
-var currentHighlightedProvince = null;
-
-// Функция для подсветки выбранной провинции
+/**
+ * Подсвечивает выбранную провинцию
+ */
 function highlightProvince(polygon) {
     // Сбрасываем предыдущую подсветку
     if (currentHighlightedProvince && currentHighlightedProvince !== polygon) {
@@ -264,54 +202,62 @@ function highlightProvince(polygon) {
     
     // Подсвечиваем новую провинцию
     polygon.setStyle({
-        fillColor: '#8B0000',
+        fillColor: polygon.provinceData.color,
         fillOpacity: 0.3,
-        weight: 2,
-        color: '#8B0000'
+        weight: 3,
+        color: polygon.provinceData.color
     });
     polygon.isHighlighted = true;
     currentHighlightedProvince = polygon;
 }
 
-// Функция для показа информации о провинции
+/**
+ * Показывает информацию о провинции во всплывающем окне
+ */
 function showProvinceInfo(province) {
-    // Ищем дополнительные данные в вашем файле
     var additionalData = findProvinceInData(province.name);
     
     var popupContent = `
-        <div class="province-popup" style="min-width: 300px;">
-            <h3 style="margin: 0 0 15px 0; color: #8B0000; border-bottom: 2px solid #CD853F; padding-bottom: 8px; text-align: center;">
+        <div class="province-popup">
+            <div class="popup-header">
+                <i class="material-icons" style="vertical-align: middle; margin-right: 8px;">terrain</i>
                 ${province.name}
-            </h3>
-            
-            <div style="margin-bottom: 12px; padding: 8px; background: rgba(205, 133, 63, 0.1); border-radius: 4px;">
-                <strong style="color: #8B4513;">📖 Описание:</strong><br>
-                ${additionalData ? additionalData.description : province.description}
             </div>
             
-            ${additionalData ? `
-            <div style="margin-bottom: 10px;">
-                <strong style="color: #8B4513;">🏛️ Тип:</strong> ${additionalData.type || 'Провинция'}
+            <div class="popup-content">
+                <div class="description-section">
+                    <i class="material-icons" style="font-size: 16px; margin-right: 5px;">description</i>
+                    <strong>Описание:</strong>
+                    <p>${additionalData ? additionalData.description : province.description}</p>
+                </div>
+                
+                ${additionalData ? `
+                <div class="info-grid">
+                    <div class="info-item">
+                        <i class="material-icons" style="font-size: 16px;">category</i>
+                        <span><strong>Тип:</strong> ${additionalData.type || 'Провинция'}</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="material-icons" style="font-size: 16px;">place</i>
+                        <span><strong>Координаты:</strong> ${additionalData.coordinates}</span>
+                    </div>
+                </div>
+                
+                ${additionalData.special ? `
+                <div class="special-feature">
+                    <i class="material-icons" style="font-size: 16px;">auto_awesome</i>
+                    <strong>Особенности:</strong> ${additionalData.special}
+                </div>
+                ` : ''}
+                ` : ''}
             </div>
             
-            <div style="margin-bottom: 10px; font-size: 0.9em; color: #666;">
-                <strong>📍 Координаты:</strong> ${additionalData.coordinates}
-            </div>
-            
-            ${additionalData.special ? `
-            <div style="margin-bottom: 10px; padding: 6px; background: rgba(255, 215, 0, 0.1); border-left: 3px solid #FFD700;">
-                <strong style="color: #8B4513;">✨ Особенности:</strong> ${additionalData.special}
-            </div>
-            ` : ''}
-            ` : ''}
-            
-            <div style="font-size: 0.8em; color: #999; text-align: center; margin-top: 15px; border-top: 1px solid #DDD; padding-top: 8px;">
+            <div class="popup-footer">
                 Кликните на другую провинцию для просмотра информации
             </div>
         </div>
     `;
 
-    // Центр провинции для popup
     var center = [
         (province.bounds[0][0] + province.bounds[1][0]) / 2,
         (province.bounds[0][1] + province.bounds[1][1]) / 2
@@ -323,240 +269,38 @@ function showProvinceInfo(province) {
         .openOn(map);
 }
 
-// Функция для поиска дополнительной информации в ваших данных
-function findProvinceInData(provinceName) {
-    // Интегрируем с вашими данными из WarmWindsTextMap.txt
-    // Пример поиска по имени провинции
-    if (window.sheetData && window.sheetData.values) {
-        for (let i = 1; i < window.sheetData.values.length; i++) {
-            const row = window.sheetData.values[i];
-            if (row[0] && row[0].toLowerCase().includes(provinceName.toLowerCase())) {
-                return {
-                    name: row[0],
-                    description: row[1],
-                    coordinates: `${row[2]}, ${row[3]}`,
-                    type: row[4],
-                    special: row[5] || '' // если есть дополнительные поля
-                };
-            }
-        }
-    }
-    return null;
+// ==================== ЗАГРУЗКА ДАННЫХ ====================
+
+/**
+ * Загружает и обрабатывает данные из файла
+ */
+function loadMapData() {
+    fetch('WarmWindsTextMap.txt')
+        .then(response => {
+            if (!response.ok) throw new Error("Ошибка загрузки файла");
+            return response.json();
+        })
+        .then(data => {
+            console.log("🗺️ Данные карты успешно загружены:", data);
+            window.sheetData = data;
+            processData(data.values);
+        })
+        .catch(error => {
+            console.error("❌ Ошибка загрузки данных:", error);
+            // Резервные данные
+            const backupData = {
+                values: [
+                    ["Меретон", "Столица Тепловетрия", 4363.0, 4464.0, "Столица"]
+                ]
+            };
+            processData(backupData.values);
+        });
 }
 
-// Модифицируем вашу функцию загрузки данных для сохранения их в глобальной переменной
-fetch('WarmWindsTextMap.txt')
-    .then(response => {
-        if (!response.ok) throw new Error("Ошибка загрузки файла");
-        return response.json();
-    })
-    .then(data => {
-        console.log("Данные успешно загружены из файла:", data);
-        // Сохраняем данные в глобальной переменной для доступа из других функций
-        window.sheetData = data;
-        processData(data.values);
-    })
-    .catch(error => {
-        console.error("Ошибка:", error);
-    });
-
-// Инициализируем интерактивные провинции
-createInteractiveProvinces();
-
-// Обновляем baseMaps
-var baseMaps = {
-    "Карта провинций": L.layerGroup([ProvMap, provincesLayer]),
-    // Другие слои...
-};
-
-// Обновляем контрол слоев
-L.control.layers(baseMaps, {
-    'Столицы': layers['Столица'],
-    'Города': layers['Город'],
-    'Крепости': layers['Крепость'],
-    'Порты': layers['Порт'],
-    'Отслеживание координат': coordinateTrackingLayer,
-    'Интерактивные провинции': provincesLayer
-}).addTo(map);
-
-// Добавляем CSS стили
-var style = document.createElement('style');
-style.textContent = `
-    .province-popup {
-        font-family: 'Georgia', serif;
-        line-height: 1.4;
-    }
-    .leaflet-popup-content-wrapper {
-        background: linear-gradient(135deg, #F5F5DC, #DEB887);
-        border: 2px solid #8B4513;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    .leaflet-popup-tip {
-        background: #DEB887;
-    }
-`;
-document.head.appendChild(style);
-L.control.layers(baseMaps).addTo(map);
-
-map.fitBounds(bounds);
-map.setMaxBounds(bounds);
-map.on('drag', function() {
-map.panInsideBounds(bounds, { animate: false });
-});
-// Иконки для разных типов меток
-var iconTypes = {
-    'Чудеса': L.IconMaterial.icon({
-        icon: 'star', // Name of Material icon
-        iconColor: '#FFD700', // Material icon color (could be rgba, hex, html name...)
-        markerColor: '#8B0000', // Marker fill color
-        outlineColor: '#2F1B0A', // Marker outline color
-        outlineWidth: 2, // Marker outline width
-        iconSize: [25, 34], // Width and height of the icon
-        popupAnchor: [0, -34]
-    }),
-    'Руины': L.IconMaterial.icon({
-        icon: 'landslide', // Обвал/руины
-        // или 'dangerous' - опасное место
-        iconColor: '#8B7355',
-        markerColor: '#4A3520',
-        outlineColor: '#2F1B0A',
-        outlineWidth: 2,
-        iconSize: [20, 28],
-        popupAnchor: [0, -28]
-    }),
-    'Поселения': L.IconMaterial.icon({
-        icon: 'account_balance', // Name of Material icon
-        iconColor: 'papyrus', // Material icon color (could be rgba, hex, html name...)
-        markerColor: 'bronze', // Marker fill color
-        outlineColor: 'sand', // Marker outline color
-        outlineWidth: 2, // Marker outline width
-        iconSize: [25, 34], // Width and height of the icon
-        popupAnchor: [0, -34]
-    }),
-    // 'Крепость': L.IconMaterial.icon({
-    //     icon: 'castle', // Name of Material icon
-    //     iconColor: 'white', // Material icon color (could be rgba, hex, html name...)
-    //     markerColor: 'Gray', // Marker fill color
-    //     outlineColor: 'black', // Marker outline color
-    //     outlineWidth: 2, // Marker outline width
-    //     iconSize: [25, 34], // Width and height of the icon
-    //     popupAnchor: [0, -34]
-    // }),
-    // 'Порт': L.IconMaterial.icon({
-    //     icon: 'anchor', // Name of Material icon
-    //     iconColor: 'white', // Material icon color (could be rgba, hex, html name...)
-    //     markerColor: 'SteelBlue', // Marker fill color
-    //     outlineColor: 'black', // Marker outline color
-    //     outlineWidth: 2, // Marker outline width
-    //     iconSize: [12, 16], // Width and height of the icon
-    //     popupAnchor: [0, -16]
-    // })
-};
-
-// Группы слоев для разных типов меток
-var layers = {
-    'Столица': L.layerGroup().addTo(map),
-    'Город': L.layerGroup().addTo(map),
-    'Крепость': L.layerGroup().addTo(map),
-    'Порт': L.layerGroup().addTo(map)
-};
-
-// Создаем отдельный слой для маркера с координатами
-var coordinateTrackingLayer = L.layerGroup();
-
-// Добавляем перемещаемый маркер столицы в слой "Отслеживание координат"
-var capitalMarker = L.marker([4500, 4500], {
-    icon: iconTypes['Столица'],
-    draggable: true // Маркер можно перемещать
-}).addTo(coordinateTrackingLayer);
-
-// Всплывающее окно с координатами
-capitalMarker.bindPopup(`<b>Столица</b><br>Координаты: ${capitalMarker.getLatLng().lat}, ${capitalMarker.getLatLng().lng}`);
-
-// Обновляем координаты при перемещении маркера
-capitalMarker.on('dragend', function(event) {
-    var marker = event.target;
-    var position = marker.getLatLng(); // Получаем новые координаты
-    
-    marker.setPopupContent(`<b>Столица</b><br>Координаты: ${position.lat.toFixed(5)}, ${position.lng.toFixed(5)}`).openPopup();
-    console.log(`Новые координаты: ${position.lat}, ${position.lng}`); // Лог координат
-});
-
-// ID Google Таблицы и API Key
-// ID Google Таблицы и API Key
-// ЗАМЕНА
-// ID Google Таблицы и API Key
-// ID Google Таблицы и API Key
-
-// var url = `https://disk.yandex.ru/i/M-st3axses3psA`;
-
-// Загружаем данные с Google Sheets
-
-// fetch(url)
-//     .then(response => response.json())
-//     .then(data => {
-//         // Логируем полученные данные для отладки
-//         console.log("Полученные данные из Google Sheets:", data);
-//         // Получаем строки значений из таблицы
-//         var rows = data.values;
-//         // Пропускаем первую строку, если это заголовки
-//         rows.slice(1).forEach(function(row) {
-//             // Важно убедиться, что все необходимые поля присутствуют
-//             if (row.length >= 5) {
-//                 var name = row[0]; // Имя
-//                 var description = row[1]; // Описание
-//                 var lat = parseFloat(row[2]); // Широта
-//                 var lng = parseFloat(row[3]); // Долгота
-//                 var type = row[4]; // Тип метки
-//                 // Проверяем корректность данных перед добавлением метки
-//                 if (!isNaN(lat) && !isNaN(lng) && iconTypes[type]) {
-//                     // Создаем метку
-//                     var marker = L.marker([lat, lng], { icon: iconTypes[type] })
-//                         .bindPopup(`
-//                             <div class="popup-header">${name}</div>
-//                             <div class="popup-description">${description}</div>
-//                         `);
-
-//                     if (type !== 'Порт') {
-//                         marker.bindTooltip(name, { permanent: true, direction: 'right', offset: L.point(11, -15) });
-//                     }
-
-//                     // Добавляем метку в соответствующую группу
-//                     layers[type].addLayer(marker);
-//                 }
-//             }
-//         });
-//     })
-//     .catch(error => {
-//         console.error("Ошибка загрузки данных с Google Sheets:", error);
-//     });
-
-// ЗАМЕНА НА СЛЕДУЮЩЕЕ
-
-// Удаляем старый URL и заменяем на загрузку файла
-fetch('WarmWindsTextMap.txt')
-    .then(response => {
-        if (!response.ok) throw new Error("Ошибка загрузки файла");
-        return response.json();
-    })
-    .then(data => {
-        console.log("Данные успешно загружены из файла:", data);
-        processData(data.values);
-    })
-    .catch(error => {
-        console.error("Ошибка:", error);
-        // Фолбек на резервные данные при ошибке
-        const backupData = {
-            values: [
-                ["Меретон", "Описание...", 4363.0, 4464.0, "Столица"]
-            ]
-        };
-        processData(backupData.values);
-    });
-
+/**
+ * Обрабатывает данные и создает метки на карте
+ */
 function processData(rows) {
-    // Пропускаем первую строку (пустой массив)
     rows.slice(1).forEach(row => {
         if (row.length >= 5) {
             const name = row[0];
@@ -566,17 +310,23 @@ function processData(rows) {
             const type = row[4];
             
             if (!isNaN(lat) && !isNaN(lng) && iconTypes[type]) {
-                const marker = L.marker([lat, lng], { icon: iconTypes[type] })
-                    .bindPopup(`
-                        <div class="popup-header">${name}</div>
-                        <div class="popup-description">${description}</div>
-                    `);
+                const marker = L.marker([lat, lng], { 
+                    icon: iconTypes[type],
+                    title: name
+                }).bindPopup(`
+                    <div class="marker-popup">
+                        <h3>${name}</h3>
+                        <p>${description}</p>
+                        <small>Координаты: ${lat.toFixed(1)}, ${lng.toFixed(1)}</small>
+                    </div>
+                `);
                 
                 if (type !== 'Порт') {
                     marker.bindTooltip(name, { 
                         permanent: true, 
                         direction: 'right', 
-                        offset: L.point(11, -15) 
+                        offset: L.point(11, -15),
+                        className: 'marker-tooltip'
                     });
                 }
                 
@@ -586,88 +336,300 @@ function processData(rows) {
     });
 }
 
-// Добавляем контрол для включения/выключения групп меток
-L.control.layers(null, {
-    'Столицы': layers['Столица'],
-    'Города': layers['Город'],
-    'Крепости': layers['Крепость'],
-    'Порты': layers['Порт'],
-    'Отслеживание координат': coordinateTrackingLayer // Добавляем слой для маркера с координатами
-}).addTo(map);
+/**
+ * Ищет дополнительную информацию о провинции в загруженных данных
+ */
+function findProvinceInData(provinceName) {
+    if (window.sheetData && window.sheetData.values) {
+        for (let i = 1; i < window.sheetData.values.length; i++) {
+            const row = window.sheetData.values[i];
+            if (row[0] && row[0].toLowerCase().includes(provinceName.toLowerCase())) {
+                return {
+                    name: row[0],
+                    description: row[1],
+                    coordinates: `${row[2]}, ${row[3]}`,
+                    type: row[4],
+                    special: row[5] || ''
+                };
+            }
+        }
+    }
+    return null;
+}
 
-//Меняет рендер карты при близком приближении
-function RenderingChanger(){
+// ==================== ФУНКЦИОНАЛЬНОСТЬ КАРТЫ ====================
+
+/**
+ * Изменяет рендеринг карты при изменении зума
+ */
+function RenderingChanger() {
     curZoom = map.getZoom();
     let mapContainer = map.getContainer();
-
-    // Выбираем все элементы img внутри контейнера карты
     let images = mapContainer.querySelectorAll('img');
 
-    // Изменяем стили для каждого элемента img
     images.forEach(function(img) {
-        if( curZoom >= 1){
+        if (curZoom >= 1) {
             img.style.imageRendering = "pixelated";
-        }
-        else{
+        } else {
             img.style.imageRendering = "auto";
         }
     });
 }
+
+/**
+ * Управляет видимостью элементов при изменении зума
+ */
 function setupZoomHideSpecificPanes(map, layersToHide, minZoomToHide) {
-    // Проходим по всем слоям карты
-    // map.eachLayer(function(layer) {
-    //     // Проверяем, является ли слой одним из тех, которые нужно скрыть
-    //     if (layersToHide.includes(layer)) {
-    //         var pane = layer.getPane();
-    //         if (pane) {
-    //             if (curZoom >= minZoomToHide) {
-    //                 pane.style.display = 'none';
-    //             } else {
-    //                 pane.style.display = 'block';
-    //             }
-    //         }
-    //     }
-    // });
-    // let panes = document.getElementsByClassName("leaflet-tooltip");
-    // panes.forEach(function(pane){
-    //     if (curZoom >= minZoomToHide) {
-    //         pane.style.display = 0.8;
-    //     } else {
-    //         pane.style.opacity = 0;
-    //     }
-    // });
-    // L.control.layers.forEach(function(layer){
-    //     if (layersToHide.includes(layer)) {
-    //         var pane = layer.getPane();
-    //         if (pane) {
-    //             if (curZoom >= minZoomToHide) {
-    //                 pane.style.display = 'none';
-    //             } else {
-    //                 pane.style.display = 'block';
-    //             }
-    //         }
-    //     }
-    // });
+    // Реализация скрытия элементов при необходимости
 }
 
-//вызывает функцию при изменении приближения карты
-map.on('zoomend', function(){
-    RenderingChanger();
-    setupZoomHideSpecificPanes(map, [layers['Столица'], layers['Город']], 5);
+// ==================== ИНИЦИАЛИЗАЦИЯ КАРТЫ ====================
+
+// Базовые слои карты
+var baseMaps = {
+    "🗺️ Карта провинций": L.layerGroup([ProvMap, provincesLayer]),
+    "🏔️ Географическая карта": L.layerGroup([image1, image2])
+};
+
+// Слои с метками
+var overlayMaps = {
+    '🏛️ Столицы': layers['Столица'],
+    '🏘️ Города': layers['Город'],
+    '🏰 Крепости': layers['Крепость'],
+    '⚓ Порты': layers['Порт'],
+    '📍 Отслеживание координат': coordinateTrackingLayer,
+    '🎯 Интерактивные провинции': provincesLayer
+};
+
+// Инициализация карты
+function initializeMap() {
+    // Настройка границ
+    map.fitBounds(bounds);
+    map.setMaxBounds(bounds);
+    
+    // Создание интерактивных провинций
+    createInteractiveProvinces();
+    
+    // Загрузка данных
+    loadMapData();
+    
+    // Добавление контролов
+    L.control.layers(baseMaps, overlayMaps).addTo(map);
+    
+    // Обработчики событий
+    map.on('drag', function() {
+        map.panInsideBounds(bounds, { animate: false });
+    });
+    
+    map.on('zoomend', function() {
+        RenderingChanger();
+        setupZoomHideSpecificPanes(map, [layers['Столица'], layers['Город']], 5);
+    });
+    
+    console.log("🗺️ Карта Тепловетрия успешно инициализирована");
+}
+
+// ==================== ДОПОЛНИТЕЛЬНЫЕ ЭЛЕМЕНТЫ ====================
+
+// Слой для отслеживания координат
+var coordinateTrackingLayer = L.layerGroup();
+
+// Маркер столицы
+var capitalMarker = L.marker([2000, 2000], {
+    icon: iconTypes['Столица'],
+    draggable: true
+}).addTo(coordinateTrackingLayer);
+
+capitalMarker.bindPopup(`
+    <div class="capital-popup">
+        <h3>🏛️ Столица</h3>
+        <p>Перетащите маркер для изменения положения</p>
+        <small>Координаты: ${capitalMarker.getLatLng().lat.toFixed(1)}, ${capitalMarker.getLatLng().lng.toFixed(1)}</small>
+    </div>
+`);
+
+capitalMarker.on('dragend', function(event) {
+    var marker = event.target;
+    var position = marker.getLatLng();
+    
+    marker.setPopupContent(`
+        <div class="capital-popup">
+            <h3>🏛️ Столица</h3>
+            <p>Новое местоположение</p>
+            <small>Координаты: ${position.lat.toFixed(1)}, ${position.lng.toFixed(1)}</small>
+        </div>
+    `).openPopup();
+    
+    console.log(`📍 Новые координаты столицы: ${position.lat}, ${position.lng}`);
 });
 
 // Подпись автора
-var signatureControl = L.control({position: 'bottomright'});
+var signatureControl = L.control({ position: 'bottomright' });
 
 signatureControl.onAdd = function(map) {
     var div = L.DomUtil.create('div', 'developer-signature');
-    div.innerHTML = 
-        '<div style="display: flex; align-items: center; background-color: rgba(255, 255, 255, 0.5); padding: 0px; border-radius: 0px;">' +
-            '<a href="https://vk.com/vivmim" target="_blank" style="margin-left: 3px; text-decoration: underline; color: blue; font-size: 1em;">' +
-                'Viv Mim' +
-            '</a>' +
-        '</div>';
+    div.innerHTML = `
+        <div class="signature-container">
+            <span class="signature-text">Создано</span>
+            <a href="https://vk.com/vivmim" target="_blank" class="signature-link">
+                Viv Mim
+            </a>
+        </div>
+    `;
     return div;
 };
 
 signatureControl.addTo(map);
+
+// ==================== СТИЛИ CSS ====================
+
+var style = document.createElement('style');
+style.textContent = `
+    .province-popup {
+        font-family: 'Georgia', serif;
+        min-width: 280px;
+        max-width: 350px;
+    }
+    
+    .popup-header {
+        background: linear-gradient(135deg, #8B0000, #CD853F);
+        color: white;
+        padding: 12px 15px;
+        margin: -15px -15px 15px -15px;
+        border-radius: 5px 5px 0 0;
+        font-size: 1.2em;
+        font-weight: bold;
+        text-align: center;
+    }
+    
+    .popup-content {
+        padding: 0 5px;
+    }
+    
+    .description-section {
+        background: rgba(245, 245, 220, 0.3);
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        border-left: 3px solid #CD853F;
+    }
+    
+    .description-section p {
+        margin: 8px 0 0 0;
+        font-style: italic;
+        color: #555;
+    }
+    
+    .info-grid {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px;
+        background: rgba(205, 133, 63, 0.1);
+        border-radius: 3px;
+    }
+    
+    .special-feature {
+        background: rgba(255, 215, 0, 0.15);
+        padding: 10px;
+        border-radius: 5px;
+        border-left: 3px solid #FFD700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .popup-footer {
+        text-align: center;
+        font-size: 0.8em;
+        color: #888;
+        margin-top: 15px;
+        padding-top: 10px;
+        border-top: 1px solid #DDD;
+    }
+    
+    .leaflet-popup-content-wrapper {
+        background: linear-gradient(135deg, #F5F5DC, #DEB887);
+        border: 2px solid #8B4513;
+        border-radius: 8px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    
+    .leaflet-popup-tip {
+        background: #DEB887;
+    }
+    
+    .marker-popup h3 {
+        color: #8B0000;
+        margin: 0 0 10px 0;
+        border-bottom: 2px solid #CD853F;
+        padding-bottom: 5px;
+    }
+    
+    .marker-tooltip {
+        background: rgba(139, 0, 0, 0.9);
+        color: white;
+        border: 1px solid #2F1B0A;
+        border-radius: 3px;
+        font-weight: bold;
+    }
+    
+    .capital-popup h3 {
+        color: #8B0000;
+        margin: 0 0 8px 0;
+    }
+    
+    .developer-signature {
+        font-family: Arial, sans-serif;
+    }
+    
+    .signature-container {
+        background: rgba(255, 255, 255, 0.8);
+        padding: 5px 10px;
+        border-radius: 15px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+    }
+    
+    .signature-text {
+        color: #666;
+        font-size: 0.9em;
+        margin-right: 5px;
+    }
+    
+    .signature-link {
+        color: #8B0000;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 0.95em;
+    }
+    
+    .signature-link:hover {
+        text-decoration: underline;
+        color: #CD853F;
+    }
+    
+    .province-polygon {
+        transition: all 0.3s ease;
+    }
+`;
+document.head.appendChild(style);
+
+// ==================== ЗАПУСК КАРТЫ ====================
+
+// Инициализация карты при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    initializeMap();
+});
+
+// Альтернативная инициализация для совместимости
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeMap);
+} else {
+    initializeMap();
+}
