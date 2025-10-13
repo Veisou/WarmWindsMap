@@ -143,8 +143,8 @@ var image2 = L.imageOverlay('TeploMapNiz.png', [[2000, 0], [4000, 3940]]).addTo(
 var image101 = L.imageOverlay('pr1 reka.png', [[0, 0], [3940, 4000]],  {opacity: 0.5});
 var image102 = L.imageOverlay('pr2 rekaniz.png', [[0, 0], [3940, 4000]], {opacity: 0.5});
 var image103 = L.imageOverlay('pr3 rekalev.png', [[0, 0], [3940, 4000]], {opacity: 0.5});
-var image104 = L.imageOverlay('pr4 levisl.png', [[0, 0], [3940, 4000]],  {opacity: 0.5});
-var image105 = L.imageOverlay('pr5 pravisl.png', [[0, 0], [3940, 4000]],  {opacity: 0.5});
+var image104 = L.imageOverlay('pr4 levisl1.png', [[0, 0], [3940, 4000]],  {opacity: 0.5});
+var image105 = L.imageOverlay('pr5 pravisl1.png', [[0, 0], [3940, 4000]],  {opacity: 0.5});
 var ProvMap = L.layerGroup([
     image101,
     image102,
