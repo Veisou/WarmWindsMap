@@ -11,11 +11,7 @@ var map = L.map('map', {
     attributionControl: false,
     fullscreenControl: true,
     fullscreenControlOptions: {
-        position: 'topleft',
-        preferCanvas: true,
-        fadeAnimation: false,
-        zoomSnap: 0.5,
-        wheelPxPerZoomLevel: 120
+        position: 'topleft'
     }
 });
 
@@ -113,7 +109,9 @@ var layers = {
     'Столица': L.layerGroup(),
     'Город': L.layerGroup(),
     'Крепость': L.layerGroup(),
-    'Порт': L.layerGroup()
+    'Порт': L.layerGroup(),
+    'Чудеса': L.layerGroup(),
+    'Руины': L.layerGroup()
 };
 
 // ==================== ИНТЕРАКТИВНЫЕ ПРОВИНЦИИ ====================
@@ -364,7 +362,9 @@ function processData(rows) {
                     });
                 }
                 
-                layers[type].addLayer(marker);
+                if (layers[type]) {
+                    layers[type].addLayer(marker);
+                }
             }
         }
     });
@@ -415,7 +415,6 @@ function RenderingChanger() {
  */
 function setupZoomHideSpecificPanes(map, layersToHide, minZoomToHide) {
     // Реализация скрытия элементов при необходимости
-    // Можно добавить логику скрытия/показа элементов при определенном зуме
 }
 
 // ==================== КОНТРОЛЫ КАРТЫ ====================
@@ -433,7 +432,7 @@ capitalMarker.bindPopup(`
     <div class="capital-popup">
         <h3>🏛️ Столица</h3>
         <p>Перетащите маркер для изменения положения</p>
-        <small>Координаты: ${capitalMarker.getLatLng().lat.toFixed(1)}, ${capitalMarker.getLatLng().lng.toFixed(1)}</small>
+        <small>Текущие координаты: ${capitalMarker.getLatLng().lat.toFixed(1)}, ${capitalMarker.getLatLng().lng.toFixed(1)}</small>
     </div>
 `);
 
@@ -459,7 +458,7 @@ signatureControl.onAdd = function(map) {
     var div = L.DomUtil.create('div', 'developer-signature');
     div.innerHTML = `
         <div class="signature-container">
-            <span class="signature-text">По вопросам:</span>
+            <span class="signature-text">Создано</span>
             <a href="https://vk.com/vivmim" target="_blank" class="signature-link">
                 Viv Mim
             </a>
@@ -484,8 +483,7 @@ var overlayMaps = {
     '⚓ Порты': layers['Порт'],
     '✨ Чудеса': layers['Чудеса'],
     '🏚️ Руины': layers['Руины'],
-    '📍 Отслеживание координат': coordinateTrackingLayer,
-    '🎯 Интерактивные провинции': provincesLayer
+    '📍 Отслеживание координат': coordinateTrackingLayer
 };
 
 /**
@@ -502,8 +500,8 @@ function initializeMap() {
     // Загрузка данных
     loadMapData();
     
-    // Добавление контролов слоев
-    L.control.layers(baseMaps, overlayMaps, {
+    // Добавление контролов слоев - ОСНОВНОЙ КОНТРОЛ
+    var layersControl = L.control.layers(baseMaps, overlayMaps, {
         position: 'topright',
         collapsed: true
     }).addTo(map);
@@ -518,7 +516,6 @@ function initializeMap() {
     
     map.on('zoomend', function() {
         RenderingChanger();
-        setupZoomHideSpecificPanes(map, [layers['Столица'], layers['Город']], 5);
     });
     
     // Первоначальная настройка рендеринга
@@ -531,14 +528,17 @@ function initializeMap() {
 
 var style = document.createElement('style');
 style.textContent = `
-    /* Основные стили для карты */
+    /* Исправляем фон карты */
     .leaflet-container {
-        background: #2F1B0A;
+        background: #f5f5f5 !important;
         font-family: 'Georgia', serif;
     }
     
-    /* Стили для контрола слоев */
+    /* Стили для контрола слоев - УБИРАЕМ СКРЫТИЕ */
     .leaflet-control-layers {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
         background: rgba(245, 245, 220, 0.95) !important;
         border: 2px solid #8B4513 !important;
         border-radius: 8px !important;
@@ -548,19 +548,21 @@ style.textContent = `
     .leaflet-control-layers-toggle {
         background-color: #DEB887 !important;
         border: 1px solid #8B4513 !important;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%238B4513"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>') !important;
     }
     
     .leaflet-control-layers-expanded {
         background: linear-gradient(135deg, #F5F5DC, #DEB887) !important;
-        padding: 10px !important;
-        border-radius: 5px !important;
-        min-width: 200px !important;
+        padding: 10px 15px !important;
+        border-radius: 8px !important;
+        font-size: 14px !important;
+        color: #2F1B0A !important;
     }
     
     .leaflet-control-layers label {
         font-family: 'Georgia', serif !important;
         color: #2F1B0A !important;
-        margin-bottom: 5px !important;
+        margin-bottom: 8px !important;
         display: flex !important;
         align-items: center !important;
         gap: 8px !important;
@@ -569,16 +571,49 @@ style.textContent = `
     }
     
     .leaflet-control-layers-separator {
-        border-top: 1px solid #8B4513 !important;
-        margin: 8px 0 !important;
+        border-top: 2px solid #8B4513 !important;
+        margin: 10px 0 !important;
     }
     
-    .leaflet-control-layers-base label,
-    .leaflet-control-layers-overlays label {
-        display: flex !important;
-        align-items: center !important;
-        gap: 8px !important;
-        padding: 5px 0 !important;
+    .leaflet-control-layers-list {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Стили для подписи автора - УБИРАЕМ СКРЫТИЕ */
+    .developer-signature {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        font-family: Arial, sans-serif;
+        pointer-events: auto !important;
+    }
+    
+    .signature-container {
+        background: rgba(255, 255, 255, 0.9) !important;
+        padding: 8px 12px !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(139, 69, 19, 0.3) !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important;
+        backdrop-filter: blur(2px);
+    }
+    
+    .signature-text {
+        color: #666 !important;
+        font-size: 0.9em !important;
+        margin-right: 6px !important;
+    }
+    
+    .signature-link {
+        color: #8B0000 !important;
+        text-decoration: none !important;
+        font-weight: bold !important;
+        font-size: 0.95em !important;
+    }
+    
+    .signature-link:hover {
+        text-decoration: underline !important;
+        color: #CD853F !important;
     }
     
     /* Стили для всплывающих окон */
@@ -683,48 +718,10 @@ style.textContent = `
         margin: 0 0 8px 0;
     }
     
-    /* Стили для подписи автора */
-    .developer-signature {
-        font-family: Arial, sans-serif;
-    }
-    
-    .signature-container {
-        background: rgba(255, 255, 255, 0.8);
-        padding: 5px 10px;
-        border-radius: 15px;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(2px);
-    }
-    
-    .signature-text {
-        color: #666;
-        font-size: 0.9em;
-        margin-right: 5px;
-    }
-    
-    .signature-link {
-        color: #8B0000;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 0.95em;
-    }
-    
-    .signature-link:hover {
-        text-decoration: underline;
-        color: #CD853F;
-    }
-    
     /* Анимации для провинций */
     .province-polygon {
         transition: all 0.3s ease;
         cursor: pointer;
-    }
-    
-    /* Стили для полноэкранного режима */
-    .leaflet-control-fullscreen a {
-        background: #DEB887;
-        border: 1px solid #8B4513;
-        border-radius: 4px;
     }
 `;
 
@@ -747,11 +744,21 @@ function startMap() {
 // Запускаем карту
 startMap();
 
-// Экспорт для глобального доступа (если нужно)
-window.WarmWindsMap = {
-    map: map,
-    layers: layers,
-    provinces: provincesLayer,
-    highlightProvince: highlightProvince,
-    showProvinceInfo: showProvinceInfo
-};
+// Принудительное отображение контролов через секунду (на всякий случай)
+setTimeout(function() {
+    // Проверяем и показываем контрол слоев
+    var layersControl = document.querySelector('.leaflet-control-layers');
+    if (layersControl) {
+        layersControl.style.display = 'block';
+        layersControl.style.visibility = 'visible';
+        layersControl.style.opacity = '1';
+    }
+    
+    // Проверяем и показываем подпись автора
+    var signature = document.querySelector('.developer-signature');
+    if (signature) {
+        signature.style.display = 'block';
+        signature.style.visibility = 'visible';
+        signature.style.opacity = '1';
+    }
+}, 1000);
