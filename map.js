@@ -15,7 +15,7 @@ var map = L.map('map', {
 });
 
 let curZoom = map.getZoom();
-var bounds = [[0, 0], [6000, 10500]];
+var bounds = [[0, 0], [3940, 4000]];
 // // Добавьте эти параметры в карту
 // // Создаем пул воркеров
 // const workerPool = [];
@@ -83,27 +83,27 @@ var bounds = [[0, 0], [6000, 10500]];
 
 //ggggggggggggggggggggggggggg
 
-var image1 = L.imageOverlay('WWmap_s1_vl.png', [[3000, 0], [6001, 3501]], {
-  minZoom: -2,
-  maxZoom: 2,
-  bounds: [[0,0], [6000,10500]],
-  noWrap: true,
-  tms: true // если тайлы в формате TMS
-}).addTo(map);
-var image2 = L.imageOverlay('WWmap_s2_vc.png', [[3000, 3500], [6001, 7001]], {
-  minZoom: -2,
-  maxZoom: 2,
-  bounds: [[0,0], [6000,10500]],
-  noWrap: true,
-  tms: true // если тайлы в формате TMS
-}).addTo(map);
-var image3 = L.imageOverlay('WWmap_s3_vp.png', [[3000, 7000], [6001, 10501]], {
-  minZoom: -2,
-  maxZoom: 2,
-  bounds: [[0,0], [6000,10500]],
-  noWrap: true,
-  tms: true // если тайлы в формате TMS
-}).addTo(map);
+// var image1 = L.imageOverlay('WWmap_s1_vl.png', [[3000, 0], [6001, 3501]], {
+//   minZoom: -2,
+//   maxZoom: 2,
+//   bounds: [[0,0], [6000,10500]],
+//   noWrap: true,
+//   tms: true // если тайлы в формате TMS
+// }).addTo(map);
+// var image2 = L.imageOverlay('WWmap_s2_vc.png', [[3000, 3500], [6001, 7001]], {
+//   minZoom: -2,
+//   maxZoom: 2,
+//   bounds: [[0,0], [6000,10500]],
+//   noWrap: true,
+//   tms: true // если тайлы в формате TMS
+// }).addTo(map);
+// var image3 = L.imageOverlay('WWmap_s3_vp.png', [[3000, 7000], [6001, 10501]], {
+//   minZoom: -2,
+//   maxZoom: 2,
+//   bounds: [[0,0], [6000,10500]],
+//   noWrap: true,
+//   tms: true // если тайлы в формате TMS
+// }).addTo(map);
 // var image4 = L.imageOverlay('WWmap_s4_nl.png', [[0, 0], [3001, 3501]], {
 //   minZoom: -2,
 //   maxZoom: 2,
@@ -111,34 +111,35 @@ var image3 = L.imageOverlay('WWmap_s3_vp.png', [[3000, 7000], [6001, 10501]], {
 //   noWrap: true,
 //   tms: true // если тайлы в формате TMS
 // }).addTo(map);
-var image5 = L.imageOverlay('WWmap_s5_nc.png', [[0, 3500], [3001, 7001]], {
-  minZoom: -2,
-  maxZoom: 2,
-  bounds: [[0,0], [6000,10500]],
-  noWrap: true,
-  tms: true // если тайлы в формате TMS
-}).addTo(map);
-var image6 = L.imageOverlay('WWmap_s6_np.png', [[0, 7000], [3001, 10501]], {
-  minZoom: -2,
-  maxZoom: 2,
-  bounds: [[0,0], [6000,10500]],
-  noWrap: true,
-  tms: true // если тайлы в формате TMS
-}).addTo(map);
+// var image5 = L.imageOverlay('WWmap_s5_nc.png', [[0, 3500], [3001, 7001]], {
+//   minZoom: -2,
+//   maxZoom: 2,
+//   bounds: [[0,0], [6000,10500]],
+//   noWrap: true,
+//   tms: true // если тайлы в формате TMS
+// }).addTo(map);
+// var image6 = L.imageOverlay('WWmap_s6_np.png', [[0, 7000], [3001, 10501]], {
+//   minZoom: -2,
+//   maxZoom: 2,
+//   bounds: [[0,0], [6000,10500]],
+//   noWrap: true,
+//   tms: true // если тайлы в формате TMS
+// }).addTo(map);
 
 
-var image10 = L.imageOverlay('WWtile1(10500-500) s 0 do 500.jpg', [[0, 0], [500, 10500]]).addTo(map);
+// var image10 = L.imageOverlay('WWtile1(10500-500) s 0 do 500.jpg', [[0, 0], [500, 10500]]).addTo(map);
 
-
+var image1 = L.imageOverlay('TeploMapVer', [[0, 0], [3940, 2001]]).addTo(map);
+var image2 = L.imageOverlay('TeploMapNiz', [[0, 2000], [3940, 4000]]).addTo(map);
 // var image4 = L.imageOverlay('WWmap_s4_nl.png', [[0, 0], [3001, 3501]]).addTo(map);
 // var image5 = L.imageOverlay('WWmap_s5_nc.png', [[0, 3500], [3001, 7001]]).addTo(map);
 // var image6 = L.imageOverlay('WWmap_s6_np.png', [[0, 7000], [3001, 10501]]).addTo(map);
 // var image1 = L.imageOverlay('WWmap_s1_vl.png', [[3000, 0], [6001, 3501]]).addTo(map);
 // var image2 = L.imageOverlay('WWmap_s2_vc.png', [[3000, 3500], [6001, 7001]]).addTo(map);
 // var image3 = L.imageOverlay('WWmap_s3_vp.png', [[3000, 7000], [6001, 10501]]).addTo(map);
-var image7 = L.imageOverlay('WWmap_provs_zero.png', [[0, 0], [6000, 10500]], {opacity: 0.4});
-var image8 = L.imageOverlay('WWmap_regs_name.png', [[0, 0], [6000, 10500]]);
-var image9 = L.imageOverlay('WWmap_fer.png', [[0, 0], [6000, 10500]], {opacity: 0.7});
+// var image7 = L.imageOverlay('WWmap_provs_zero.png', [[0, 0], [6000, 10500]], {opacity: 0.4});
+// var image8 = L.imageOverlay('WWmap_regs_name.png', [[0, 0], [6000, 10500]]);
+// var image9 = L.imageOverlay('WWmap_fer.png', [[0, 0], [6000, 10500]], {opacity: 0.7});
 var emptyLayer = L.layerGroup();
 var baseMaps = {
     "Географическая карта": image8,
@@ -156,42 +157,52 @@ map.panInsideBounds(bounds, { animate: false });
 });
 // Иконки для разных типов меток
 var iconTypes = {
-    'Столица': L.IconMaterial.icon({
+    'Чудеса': L.IconMaterial.icon({
         icon: 'star', // Name of Material icon
-        iconColor: 'white', // Material icon color (could be rgba, hex, html name...)
-        markerColor: '#B22222', // Marker fill color
-        outlineColor: 'black', // Marker outline color
+        iconColor: '#FFD700', // Material icon color (could be rgba, hex, html name...)
+        markerColor: '#8B0000', // Marker fill color
+        outlineColor: '#2F1B0A', // Marker outline color
         outlineWidth: 2, // Marker outline width
         iconSize: [25, 34], // Width and height of the icon
         popupAnchor: [0, -34]
     }),
-    'Город': L.IconMaterial.icon({
-        icon: 'home', // Name of Material icon
-        iconColor: 'white', // Material icon color (could be rgba, hex, html name...)
-        markerColor: 'Orange', // Marker fill color
-        outlineColor: 'black', // Marker outline color
+    'Руины': L.IconMaterial.icon({
+        icon: 'landslide', // Обвал/руины
+        // или 'dangerous' - опасное место
+        iconColor: '#8B7355',
+        markerColor: '#4A3520',
+        outlineColor: '#2F1B0A',
+        outlineWidth: 2,
+        iconSize: [20, 28],
+        popupAnchor: [0, -28]
+    }),
+    'Поселения': L.IconMaterial.icon({
+        icon: 'account_balance', // Name of Material icon
+        iconColor: 'papyrus', // Material icon color (could be rgba, hex, html name...)
+        markerColor: 'bronze', // Marker fill color
+        outlineColor: 'sand', // Marker outline color
         outlineWidth: 2, // Marker outline width
         iconSize: [25, 34], // Width and height of the icon
         popupAnchor: [0, -34]
     }),
-    'Крепость': L.IconMaterial.icon({
-        icon: 'castle', // Name of Material icon
-        iconColor: 'white', // Material icon color (could be rgba, hex, html name...)
-        markerColor: 'Gray', // Marker fill color
-        outlineColor: 'black', // Marker outline color
-        outlineWidth: 2, // Marker outline width
-        iconSize: [25, 34], // Width and height of the icon
-        popupAnchor: [0, -34]
-    }),
-    'Порт': L.IconMaterial.icon({
-        icon: 'anchor', // Name of Material icon
-        iconColor: 'white', // Material icon color (could be rgba, hex, html name...)
-        markerColor: 'SteelBlue', // Marker fill color
-        outlineColor: 'black', // Marker outline color
-        outlineWidth: 2, // Marker outline width
-        iconSize: [12, 16], // Width and height of the icon
-        popupAnchor: [0, -16]
-    })
+    // 'Крепость': L.IconMaterial.icon({
+    //     icon: 'castle', // Name of Material icon
+    //     iconColor: 'white', // Material icon color (could be rgba, hex, html name...)
+    //     markerColor: 'Gray', // Marker fill color
+    //     outlineColor: 'black', // Marker outline color
+    //     outlineWidth: 2, // Marker outline width
+    //     iconSize: [25, 34], // Width and height of the icon
+    //     popupAnchor: [0, -34]
+    // }),
+    // 'Порт': L.IconMaterial.icon({
+    //     icon: 'anchor', // Name of Material icon
+    //     iconColor: 'white', // Material icon color (could be rgba, hex, html name...)
+    //     markerColor: 'SteelBlue', // Marker fill color
+    //     outlineColor: 'black', // Marker outline color
+    //     outlineWidth: 2, // Marker outline width
+    //     iconSize: [12, 16], // Width and height of the icon
+    //     popupAnchor: [0, -16]
+    // })
 };
 
 // Группы слоев для разных типов меток
