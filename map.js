@@ -471,16 +471,13 @@ signatureControl.onAdd = function(map) {
 
 // Базовые слои карты
 var baseMaps = {
-    "🗺️ Карта провинций": L.layerGroup([ProvMap, provincesLayer]),
     "🏔️ Географическая карта": L.layerGroup([image1, image2])
 };
 
 // Слои с метками
 var overlayMaps = {
-    '🏛️ Столицы': layers['Столица'],
+    '🗺️ Карта провинций': L.layerGroup([ProvMap, provincesLayer]),
     '🏘️ Города': layers['Город'],
-    '🏰 Крепости': layers['Крепость'],
-    '⚓ Порты': layers['Порт'],
     '✨ Чудеса': layers['Чудеса'],
     '🏚️ Руины': layers['Руины'],
     '📍 Отслеживание координат': coordinateTrackingLayer
