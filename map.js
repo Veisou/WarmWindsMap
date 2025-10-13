@@ -470,7 +470,7 @@ signatureControl.onAdd = function(map) {
     var div = L.DomUtil.create('div', 'developer-signature');
     div.innerHTML = `
         <div class="signature-container">
-            <span class="signature-text">Создано</span>
+            <span class="signature-text">Создатель:</span>
             <a href="https://vk.com/vivmim" target="_blank" class="signature-link">
                 Viv Mim
             </a>
