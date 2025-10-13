@@ -140,10 +140,20 @@ var image2 = L.imageOverlay('TeploMapNiz.png', [[0, 2000], [3940, 4000]]).addTo(
 // var image7 = L.imageOverlay('WWmap_provs_zero.png', [[0, 0], [6000, 10500]], {opacity: 0.4});
 // var image8 = L.imageOverlay('WWmap_regs_name.png', [[0, 0], [6000, 10500]]);
 // var image9 = L.imageOverlay('WWmap_fer.png', [[0, 0], [6000, 10500]], {opacity: 0.7});
-var emptyLayer = L.layerGroup();
+var image101 = L.imageOverlay('pr1 reka.png', [[0, 0], [3940, 4000]],  {opacity: 0.5});
+var image102 = L.imageOverlay('pr2 rekaniz.png', [[0, 0], [3940, 4000]], {opacity: 0.5});
+var image103 = L.imageOverlay('pr3 rekalev.png', [[0, 0], [3940, 4000]], {opacity: 0.5});
+var image104 = L.imageOverlay('pr4 levisl.png', [[0, 0], [3940, 4000]],  {opacity: 0.5});
+var image105 = L.imageOverlay('pr5 pravisl.png', [[0, 0], [3940, 4000]],  {opacity: 0.5});
+var ProvMap = L.layerGroup([
+    image101,
+    image102,
+    image103,
+    image104,
+    image105,
+]);
 var baseMaps = {
-    "Географическая карта": image8,
-    "Политическая карта": image7,
+    "Карта провинций": ProvMap,
     "Индекс урожайности": image9,
     "Чистая карта": emptyLayer
 };
