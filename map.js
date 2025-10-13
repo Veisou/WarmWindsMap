@@ -153,9 +153,9 @@ var ProvMap = L.layerGroup([
     image105,
 ]);
 var baseMaps = {
-    "Карта провинций": ProvMap,
-    "Индекс урожайности": image9,
-    "Чистая карта": emptyLayer
+    "Карта провинций": ProvMap
+    // "Индекс урожайности": image9,
+    // "Чистая карта": emptyLayer
 };
 
 L.control.layers(baseMaps).addTo(map);
